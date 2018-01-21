@@ -1,0 +1,28 @@
+{
+  "name": "@tepez/jasmine-misc-matchers",
+  "version": "0.0.0",
+  "description": "Various matchers for jasmine2",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "node node_modules/gulp/bin/gulp.js build",
+    "test": "node node_modules/gulp/bin/gulp.js build-unit-test",
+    "update": "node node_modules/gulp/bin/gulp.js build && node node_modules/np/cli.js --no-publish --no-yarn"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tepez/jasmine-misc-matchers.git"
+  },
+  "author": "Tom Yam <tomyam@tepez.co.il>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tepez/jasmine-misc-matchers/issues"
+  },
+  "homepage": "https://github.com/tepez/jasmine-misc-matchers#readme",
+  "devDependencies": {
+    "@tepez/typescript-build-gulp-tasks": "^3.0.0",
+    "@types/jasmine": "^2.8.4",
+    "gulp": "^3.9.1",
+    "np": "^2.18.3"
+  }
+}
