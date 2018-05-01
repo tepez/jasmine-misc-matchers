@@ -21,8 +21,8 @@
   "homepage": "https://github.com/tepez/jasmine-misc-matchers#readme",
   "devDependencies": {
     "@tepez/typescript-build-gulp-tasks": "^3.0.0",
-    "@types/jasmine": "^2.8.4",
+    "@types/jasmine": "^2.8.6",
     "gulp": "^3.9.1",
-    "np": "^2.18.3"
+    "np": "^2.20.1"
   }
 }
