@@ -31,5 +31,21 @@ export const matchers = {
     },
 };
 
-
+// return `any` because @types/jasmine doesn't allow creating custom matchers yet (at 2.8.6)
+export function JSONStringMatcher(obj): any {
+    return {
+        asymmetricMatch: function(json) {
+            let parsedJson;
+            try {
+                parsedJson = JSON.parse(json)
+            } catch (err) {
+                return false;
+            }
+            return (<any>jasmine).matchersUtil.equals(obj, parsedJson);
+        },
+        jasmineToString: function() {
+            return `JSON serialization of ${JSON.stringify(obj)}`;
+        }
+    };
+}
 

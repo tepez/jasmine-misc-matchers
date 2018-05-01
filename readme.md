@@ -12,7 +12,7 @@ npm install --save @tepez/jasmine-misc-matchers
 
 ## Usage
 ```js
-const { matchers } = require('@tepez/jasmine-misc-matchers');
+const { matchers, JSONStringMatcher } = require('@tepez/jasmine-misc-matchers');
 
 beforeEach(() => {
     jasmine.addMatchers(matchers);
@@ -23,6 +23,10 @@ it('toHaveBeenCalledWithAt', () => {
     spy(1, 2, 3);
     expect(spy).toHaveBeenCalledWithAt(0, [1, 2, 3]);
 });
+
+it('JSONStringMatcher', () => {
+    expect('{"a": "b"}').toEqual(JSONStringMatcher({a: 'b'}));
+});
 ```
 
 
@@ -32,3 +36,9 @@ it('toHaveBeenCalledWithAt', () => {
 * expect(spy: jasmine.Spy).toHaveBeenCalledWithAt(callIndex: number, expectedArgs: any[])
 
 Expects the call arguments of the `callIndex` call to a spied-on function to equal `expectedArgs`.
+
+### Custom asymmetric equality tester
+
+* JSONStringMatcher(obj)
+
+Tests weather a string is a JSON serialization of given `obj`.

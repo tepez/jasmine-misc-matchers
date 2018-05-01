@@ -1,4 +1,6 @@
 import { matchers } from './'
+import { JSONStringMatcher } from './matchers'
+
 
 interface ISpec {
 
@@ -17,5 +19,11 @@ describe('jasmine-misc-matchers', () => {
         jasmine.addMatchers(matchers);
         expect(spy).toHaveBeenCalledWithAt(0, [1, 2, 3]);
         expect(spy).not.toHaveBeenCalledWithAt(0, [1, 2]);
+    });
+
+    it('JSONStringMatcher', () => {
+       expect('{"a": "b"}').toEqual(JSONStringMatcher({a: 'b'}));
+       expect('{"a": "b"}').not.toEqual(JSONStringMatcher({a: 'c'}));
+       expect('xxx').not.toEqual(JSONStringMatcher({}));
     });
 });
