@@ -24,5 +24,8 @@
     "@types/jasmine": "^2.8.6",
     "gulp": "^3.9.1",
     "np": "^2.20.1"
+  },
+  "dependencies": {
+    "@types/node": "^8.10.38"
   }
 }

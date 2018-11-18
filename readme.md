@@ -42,3 +42,11 @@ Expects the call arguments of the `callIndex` call to a spied-on function to equ
 * JSONStringMatcher(obj)
 
 Tests weather a string is a JSON serialization of given `obj`.
+
+### Utilities
+
+* setSpecTimeout(timeout: number): void
+* mockClock(date: Date): void
+* updateDate(date: Date): void
+* getJsonRep(obj: any): any
+* testUnhandledRejections(): void
