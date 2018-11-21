@@ -1,51 +1,122 @@
+import * as Sinon from 'Sinon'
+import CustomMatcherFactories = jasmine.CustomMatcherFactories;
+
+
 declare global {
     namespace jasmine {
         interface Matchers<T> {
             toHaveBeenCalledWithAt(callIndex: number, expectedArgs: any[]): void;
+
+            // No need to have toHaveBeenCalledTimes since it's part of the jasmine core API
+            // we just override it to add support for sinon spies
         }
     }
 }
 
-export const matchers = {
+export type AllSpyTypes = jasmine.Spy | Sinon.SinonStub | Sinon.SinonSpy
+
+function isJasmineSpy(spy: AllSpyTypes): spy is jasmine.Spy {
+    return (jasmine as any).isSpy(spy)
+}
+
+function isSinonSpy(spy: AllSpyTypes): spy is Sinon.SinonSpy | Sinon.SinonStub {
+    return (spy as any).isSinonProxy;
+}
+
+
+export const matchers: CustomMatcherFactories = {
     toHaveBeenCalledWithAt: function () {
         return {
-            compare: function (spy: jasmine.Spy, callIndex, expectedArgs) {
-                if (!(<any>jasmine).isSpy(spy)) {
-                    throw new Error('toHaveBeenCalledWithAt: must be called on spied');
+            compare: function (spy: AllSpyTypes, callIndex: number, expectedArgs: any[]) {
+                let actualArgs: any[];
+                let name: string;
+
+                if (!Number.isFinite(callIndex) || callIndex < 0 || !Number.isSafeInteger(callIndex)) {
+                    throw new Error(`toHaveBeenCalledWithAt: callIndex must be a positive integer, got ${callIndex}`);
                 }
-                if (callIndex == null) {
-                    throw new Error('toHaveBeenCalledWithAt: must specify callIndex');
-                }
-                const actualArgs = spy.calls.argsFor(callIndex);
-                const ret: jasmine.CustomMatcherResult = {
-                    pass: (<any>jasmine).matchersUtil.equals(actualArgs, expectedArgs),
-                };
-                if (ret.pass) {
-                    ret.message = 'Expected spy ' + (<any>spy).and.identity() + ' NOT to be called with ' + jasmine.pp(expectedArgs) + ' on call number ' + callIndex;
+
+                if (isJasmineSpy(spy)) {
+                    name = (<any>spy).and.identity();
+                    actualArgs = spy.calls.argsFor(callIndex);
+
+                } else if (isSinonSpy(spy)) {
+                    name = (spy as any).displayName;
+
+                    actualArgs = callIndex < spy.callCount
+                        ? spy.getCall(callIndex).args
+                        : []
                 } else {
-                    ret.message = 'Expected spy ' + (<any>spy).and.identity() + ' to be called with ' + jasmine.pp(expectedArgs) + ' on call number ' + callIndex + ', but it was called with ' + jasmine.pp(actualArgs);
+                    throw new Error(`toHaveBeenCalledWithAt: must be called on a spy, got ${jasmine.pp(spy)}`);
                 }
+
+                const ret: jasmine.CustomMatcherResult = {
+                    pass: jasmine.matchersUtil.equals(actualArgs, expectedArgs),
+                };
+
+                if (ret.pass) {
+                    ret.message = `Expected spy ${name} NOT to be called with ${jasmine.pp(expectedArgs)} on call number ${callIndex}`;
+                } else {
+                    ret.message = `Expected spy ${name} to be called with ${jasmine.pp(expectedArgs)} on call number ${callIndex}, but it was called with ${jasmine.pp(actualArgs)}`;
+                }
+
                 return ret;
             },
-        } as jasmine.CustomMatcher;
+        };
+    },
+
+    // Based on
+    // https://github.com/jasmine/jasmine/blob/v3.3.0/lib/jasmine-core/jasmine.js#L4506
+    toHaveBeenCalledTimes: function () {
+        return {
+            compare: function (spy: AllSpyTypes, expected: number) {
+                let name: string;
+                let actualCallTimes: number;
+
+                if (!Number.isFinite(expected) || expected < 0 || !Number.isSafeInteger(expected)) {
+                    throw new Error(`toHaveBeenCalledWithAt: expected be a positive integer, got ${expected}`);
+                }
+
+                if (isJasmineSpy(spy)) {
+                    name = (<any>spy).and.identity();
+                    actualCallTimes = spy.calls.count()
+
+                } else if (isSinonSpy(spy)) {
+                    name = (spy as any).displayName;
+                    actualCallTimes = spy.callCount;
+                } else {
+                    throw new Error(`toHaveBeenCalledWithAt: must be called on a spy, got ${jasmine.pp(spy)}`);
+                }
+
+                const ret: jasmine.CustomMatcherResult = {
+                    pass: actualCallTimes === expected,
+                };
+
+                if (ret.pass) {
+                    ret.message = `Expected spy ${name} NOT to be called ${expected} times`;
+                } else {
+                    ret.message = `Expected spy ${name} to be called ${expected} times, but it was called ${actualCallTimes} times`;
+                }
+
+                return ret;
+            },
+        };
     },
 };
 
 // return `any` because @types/jasmine doesn't allow creating custom matchers yet (at 2.8.6)
 export function JSONStringMatcher(obj): any {
     return {
-        asymmetricMatch: function(json) {
+        asymmetricMatch: function (json) {
             let parsedJson;
             try {
                 parsedJson = JSON.parse(json)
             } catch (err) {
                 return false;
             }
-            return (<any>jasmine).matchersUtil.equals(obj, parsedJson);
+            return jasmine.matchersUtil.equals(obj, parsedJson);
         },
-        jasmineToString: function() {
+        jasmineToString: function () {
             return `JSON serialization of ${JSON.stringify(obj)}`;
-        }
+        },
     };
 }
-

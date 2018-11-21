@@ -33,9 +33,20 @@ it('JSONStringMatcher', () => {
 ## API
 
 ### Custom matchers
+
+#### Spies
+
+Both jasmine and sinon spies are supported.
+
 * expect(spy: jasmine.Spy).toHaveBeenCalledWithAt(callIndex: number, expectedArgs: any[])
 
-Expects the call arguments of the `callIndex` call to a spied-on function to equal `expectedArgs`.
+Expects the call arguments of the `callIndex` call to a spied-on function to equal exactly `expectedArgs`.
+
+* expect(spy: jasmine.Spy).toHaveBeenCalledWithAt(callIndex: number, expectedArgs: any[])
+
+Expects the spy to have been called exactly
+
+
 
 ### Custom asymmetric equality tester
 
