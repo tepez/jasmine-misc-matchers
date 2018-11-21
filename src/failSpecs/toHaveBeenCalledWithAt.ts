@@ -26,6 +26,8 @@ describe('toHaveBeenCalledWithAt fails specs', () => {
         });
 
         it('negative', () => {
+            expect(spec.spy).not.toHaveBeenCalledWithAt(0, ['b']);
+
             spec.spy('b');
             expect(spec.spy).not.toHaveBeenCalledWithAt(0, ['b']);
         });

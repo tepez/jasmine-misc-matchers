@@ -122,7 +122,7 @@ describe('jasmine-misc-matchers', () => {
                     [
                         {
                             matcherName: 'toHaveBeenCalledWithAt',
-                            message: `Expected spy mock spy to be called with [ 'a' ] on call number 0, but it was called with [  ]`,
+                            message: `Expected spy mock spy to be called with [ 'a' ] on call number 0, but it was only called 0 times`,
                             stack: jasmine.anything(),
                             passed: false,
                             expected: [
