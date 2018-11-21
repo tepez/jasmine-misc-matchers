@@ -96,14 +96,14 @@ export function testUnhandledRejections(): void {
 
         process.on(
             'unhandledRejection',
-            this.unhandledRejection.listener
+            this.unhandledRejection.listener,
         );
     });
 
     afterEach(function (this: IUnhandledRejectionsSpec) {
         process.removeListener(
             'unhandledRejection',
-            this.unhandledRejection.listener
+            this.unhandledRejection.listener,
         );
         expect(this.unhandledRejection.actual).toEqual(this.unhandledRejection.expected);
     });
