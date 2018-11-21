@@ -1,5 +1,6 @@
 import Sinon = require('sinon');
-import { AllSpyTypes, matchers } from './'
+import * as _ from 'lodash'
+import { AllSpyTypes, executeSpecFile, matchers } from './'
 import { JSONStringMatcher } from './matchers'
 
 
@@ -21,11 +22,11 @@ describe('jasmine-misc-matchers', () => {
         });
 
         it('should work with sinon spy', () => {
-            runTest(Sinon.spy());
+            runTest(Sinon.spy().named('mock spy'));
         });
 
         it('should work with sinon stub', () => {
-            runTest(Sinon.stub());
+            runTest(Sinon.stub().named('mock spy'));
         });
     }
 
@@ -46,6 +47,52 @@ describe('jasmine-misc-matchers', () => {
         }
 
         testAllSpyTypes(testToHaveBeenCalledTimes);
+
+        it('fail specs', async () => {
+            const specs = await executeSpecFile('./src/failSpecs/toHaveBeenCalledTimes.ts');
+
+
+            expect(specs.map((spec) => spec.failedExpectations)).toEqual(
+                _.flatten(_.times(3, _.constant([
+                    [
+                        {
+                            matcherName: 'toHaveBeenCalledTimes',
+                            message: 'Expected spy mock spy to be called 1 times, but it was called 0 times',
+                            stack: jasmine.anything() as any,
+                            passed: false,
+                            expected: 1 as any,
+                            actual: jasmine.anything() as any,
+                        },
+                        {
+                            matcherName: 'toHaveBeenCalledTimes',
+                            message: 'Expected spy mock spy to be called 0 times, but it was called 1 times',
+                            stack: jasmine.anything() as any,
+                            passed: false,
+                            expected: 0 as any,
+                            actual: jasmine.anything() as any,
+                        },
+                    ],
+                    [
+                        {
+                            matcherName: 'toHaveBeenCalledTimes',
+                            message: 'Expected spy mock spy NOT to be called 0 times',
+                            stack: jasmine.anything() as any,
+                            passed: false,
+                            expected: 0 as any,
+                            actual: jasmine.anything() as any,
+                        },
+                        {
+                            matcherName: 'toHaveBeenCalledTimes',
+                            message: 'Expected spy mock spy NOT to be called 1 times',
+                            stack: jasmine.anything() as any,
+                            passed: false,
+                            expected: 1 as any,
+                            actual: jasmine.anything() as any,
+                        },
+                    ],
+                ]))),
+            );
+        });
     });
 
     describe('toHaveBeenCalledWithAt', () => {
@@ -66,6 +113,58 @@ describe('jasmine-misc-matchers', () => {
         }
 
         testAllSpyTypes(testToHaveBeenCalledWithAt);
+
+        it('fail specs', async () => {
+            const specs = await executeSpecFile('./src/failSpecs/toHaveBeenCalledWithAt.ts');
+
+            expect(specs.map((spec) => spec.failedExpectations)).toEqual(
+                _.flatten(_.times(3, _.constant([
+                    [
+                        {
+                            matcherName: 'toHaveBeenCalledWithAt',
+                            message: `Expected spy mock spy to be called with [ 'a' ] on call number 0, but it was called with [  ]`,
+                            stack: jasmine.anything(),
+                            passed: false,
+                            expected: [
+                                0,
+                                [
+                                    'a',
+                                ],
+                            ] as any,
+                            actual: jasmine.anything() as any,
+                        },
+                        {
+                            matcherName: 'toHaveBeenCalledWithAt',
+                            message: `Expected spy mock spy to be called with [ 'a' ] on call number 0, but it was called with [ 'b' ]`,
+                            stack: jasmine.anything(),
+                            passed: false,
+                            expected: [
+                                0,
+                                [
+                                    'a',
+                                ],
+                            ] as any,
+                            actual: jasmine.anything() as any,
+                        },
+                    ],
+                    [
+                        {
+                            matcherName: 'toHaveBeenCalledWithAt',
+                            message: `Expected spy mock spy NOT to be called with [ 'b' ] on call number 0`,
+                            stack: jasmine.anything() as any,
+                            passed: false,
+                            expected: [
+                                0,
+                                [
+                                    'b',
+                                ],
+                            ] as any,
+                            actual: jasmine.anything() as any,
+                        },
+                    ],
+                ]))),
+            );
+        });
     });
 
 
