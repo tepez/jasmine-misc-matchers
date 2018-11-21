@@ -61,3 +61,9 @@ Tests weather a string is a JSON serialization of given `obj`.
 * updateDate(date: Date): void
 * getJsonRep(obj: any): any
 * testUnhandledRejections(): void
+
+
+* executeSpecFile(filePath: string): Promise<jasmine.CustomReporterResult[]>
+
+Execute the specs a jasmine specs file at given path and return the spec results.
+Very useful for testing failures of custom matchers.

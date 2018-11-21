@@ -1,4 +1,5 @@
 import UnhandledRejectionListener = NodeJS.UnhandledRejectionListener;
+const Jasmine = require('jasmine');
 
 
 /**
@@ -107,4 +108,74 @@ export function testUnhandledRejections(): void {
         );
         expect(this.unhandledRejection.actual).toEqual(this.unhandledRejection.expected);
     });
+}
+
+/**
+ * This reporter accumulates the spec results of a jasmine run
+ */
+class SpecExtractorReporter implements jasmine.CustomReporter {
+    constructor(protected specs: jasmine.CustomReporterResult[]) {
+
+    }
+
+    specDone(spec: jasmine.CustomReporterResult): void {
+        this.specs.push(spec);
+    }
+}
+
+/**
+ * Execute the specs a jasmine specs file at given path and return the spec results.
+ *
+ * Very useful for testing failures of custom matchers.
+ *
+ * @param filePath
+ */
+export async function executeSpecFile(filePath: string): Promise<jasmine.CustomReporterResult[]> {
+    // Save the global state before the second jasmine instance modifies it
+    const globalVariables = [
+        'jasmine',
+
+        // https://jasmine.github.io/api/2.9/global
+        'afterAll',
+        'afterEach',
+        'beforeAll',
+        'beforeEach',
+        'describe',
+        'expect',
+        'fail',
+        'fdescribe',
+        'fit',
+        'it',
+        'pending',
+        'spyOn',
+        'spyOnProperty',
+        'xdescribe',
+        'xit',
+    ];
+
+    const beforeGlobal = {};
+    for (const key of globalVariables) {
+        beforeGlobal[key] = global[key];
+    }
+
+    const newJasmine = new Jasmine();
+
+    const specs: jasmine.CustomReporterResult[] = [];
+    newJasmine.addReporter(new SpecExtractorReporter(specs));
+
+    newJasmine.execute([
+        filePath
+    ]);
+
+    await new Promise((resolve) => {
+        newJasmine.onComplete((passed) => {
+            for (const key of globalVariables) {
+                global[key] = beforeGlobal[key]
+            }
+
+            resolve();
+        });
+    });
+
+    return specs;
 }
