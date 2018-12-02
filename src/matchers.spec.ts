@@ -135,7 +135,7 @@ describe('jasmine-misc-matchers', () => {
                         },
                         {
                             matcherName: 'toHaveBeenCalledWithAt',
-                            message: `Expected spy mock spy to be called with [ 'a' ] on call number 0, but it was called with [ 'b' ]`,
+                            message: `Expected spy mock spy to be called with [ 'a' ] on call number 0, but it was called with unexpected arguments:\nExpected $[0] = 'b' to equal 'a'.`,
                             stack: jasmine.anything(),
                             passed: false,
                             expected: [

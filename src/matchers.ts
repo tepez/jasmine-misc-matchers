@@ -10,6 +10,18 @@ declare global {
             // No need to have toHaveBeenCalledTimes since it's part of the jasmine core API
             // we just override it to add support for sinon spies
         }
+
+        // Add typings for undocumented DiffBuilder
+        // https://github.com/jasmine/jasmine/blob/v3.3.0/src/core/matchers/DiffBuilder.js#L1
+        class DiffBuilder {
+            getMessage(): string
+        }
+
+        interface MatchersUtil {
+            // equals accept a DiffBuilder as optional last argument
+            // https://github.com/jasmine/jasmine/blob/v3.3.0/src/core/matchers/matchersUtil.js#L84
+            equals(a: any, b: any, customTesters?: CustomEqualityTester[], builder?: DiffBuilder): boolean;
+        }
     }
 }
 
@@ -55,9 +67,11 @@ export const matchers: CustomMatcherFactories = {
                     throw new Error(`toHaveBeenCalledWithAt: must be called on a spy, got ${jasmine.pp(spy)}`);
                 }
 
+                const diffBuilder = new jasmine.DiffBuilder();
+
                 const ret: jasmine.CustomMatcherResult = {
                     pass: wasCalled
-                        ? jasmine.matchersUtil.equals(actualArgs, expectedArgs)
+                        ? jasmine.matchersUtil.equals(actualArgs, expectedArgs, null, diffBuilder)
                         : false
                 };
 
@@ -65,7 +79,7 @@ export const matchers: CustomMatcherFactories = {
                     if (ret.pass) {
                         ret.message = `Expected spy ${name} NOT to be called with ${jasmine.pp(expectedArgs)} on call number ${callIndex}`;
                     } else {
-                        ret.message = `Expected spy ${name} to be called with ${jasmine.pp(expectedArgs)} on call number ${callIndex}, but it was called with ${jasmine.pp(actualArgs)}`;
+                        ret.message = `Expected spy ${name} to be called with ${jasmine.pp(expectedArgs)} on call number ${callIndex}, but it was called with unexpected arguments:\n${diffBuilder.getMessage()}`;
                     }
                 } else {
                     if (ret.pass) {
