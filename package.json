@@ -23,13 +23,12 @@
     "@tepez/typescript-build-gulp-tasks": "^3.1.0",
     "@types/jasmine": "^2.8.12",
     "@types/lodash": "^4.14.118",
+    "@types/node": "^10.12.11",
     "@types/sinon": "5.0.5",
     "gulp": "^3.9.1",
     "lodash": "^4.17.11",
     "np": "^2.20.1",
     "sinon": "^7.1.1"
   },
-  "dependencies": {
-    "@types/node": "^8.10.38"
-  }
+  "dependencies": {}
 }

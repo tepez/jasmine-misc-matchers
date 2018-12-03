@@ -1,5 +1,3 @@
-import UnhandledRejectionListener = NodeJS.UnhandledRejectionListener;
-
 const Jasmine = require('jasmine');
 
 
@@ -75,7 +73,8 @@ export interface IUnhandledRejectionsSpec {
             reason: any
             promise: Promise<any>
         }[]
-        listener: UnhandledRejectionListener
+        // NodeJS.UnhandledRejectionListener
+        listener: (reason: any, promise: Promise<any>) => void
     }
 }
 
