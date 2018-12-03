@@ -1,7 +1,8 @@
 import Sinon = require('sinon');
 import * as _ from 'lodash'
-import { AllSpyTypes, executeSpecFile, matchers } from './'
-import { JSONStringMatcher } from './matchers'
+import { JSONStringMatcher, matchers } from './matchers'
+import { AllSpyTypes } from './spies';
+import { executeSpecFile } from './utils'
 
 
 interface ISpec {

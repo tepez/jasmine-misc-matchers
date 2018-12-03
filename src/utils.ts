@@ -1,4 +1,5 @@
 import UnhandledRejectionListener = NodeJS.UnhandledRejectionListener;
+
 const Jasmine = require('jasmine');
 
 
@@ -164,7 +165,7 @@ export async function executeSpecFile(filePath: string): Promise<jasmine.CustomR
     newJasmine.addReporter(new SpecExtractorReporter(specs));
 
     newJasmine.execute([
-        filePath
+        filePath,
     ]);
 
     await new Promise((resolve) => {
@@ -179,3 +180,4 @@ export async function executeSpecFile(filePath: string): Promise<jasmine.CustomR
 
     return specs;
 }
+

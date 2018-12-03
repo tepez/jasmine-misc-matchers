@@ -1,4 +1,4 @@
-import * as Sinon from 'sinon'
+import { AllSpyTypes, isJasmineSpy, isSinonSpy } from './spies'
 import CustomMatcherFactories = jasmine.CustomMatcherFactories;
 
 
@@ -23,16 +23,6 @@ declare global {
             equals(a: any, b: any, customTesters?: CustomEqualityTester[], builder?: DiffBuilder): boolean;
         }
     }
-}
-
-export type AllSpyTypes = jasmine.Spy | Sinon.SinonStub | Sinon.SinonSpy
-
-function isJasmineSpy(spy: AllSpyTypes): spy is jasmine.Spy {
-    return (jasmine as any).isSpy(spy)
-}
-
-function isSinonSpy(spy: AllSpyTypes): spy is Sinon.SinonSpy | Sinon.SinonStub {
-    return (spy as any).isSinonProxy;
 }
 
 
@@ -72,7 +62,7 @@ export const matchers: CustomMatcherFactories = {
                 const ret: jasmine.CustomMatcherResult = {
                     pass: wasCalled
                         ? jasmine.matchersUtil.equals(actualArgs, expectedArgs, null, diffBuilder)
-                        : false
+                        : false,
                 };
 
                 if (wasCalled) {

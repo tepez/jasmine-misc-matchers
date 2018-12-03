@@ -1,5 +1,6 @@
-import { AllSpyTypes, matchers } from '../matchers';
 import * as Sinon from 'sinon'
+import { matchers } from '../matchers'
+import { AllSpyTypes } from '../spies'
 
 
 interface ISpec {

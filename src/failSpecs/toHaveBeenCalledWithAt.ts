@@ -1,5 +1,6 @@
-import { AllSpyTypes, matchers } from '../matchers';
 import * as Sinon from 'sinon'
+import { matchers } from '../matchers'
+import { AllSpyTypes } from '../spies'
 
 
 interface ISpec {
@@ -19,10 +20,10 @@ describe('toHaveBeenCalledWithAt fails specs', () => {
 
     function testToHaveBeenCalledWithAt() {
         it('positive', () => {
-            expect(spec.spy).toHaveBeenCalledWithAt(0, [ 'a' ]);
+            expect(spec.spy).toHaveBeenCalledWithAt(0, ['a']);
 
             spec.spy('b');
-            expect(spec.spy).toHaveBeenCalledWithAt(0, [ 'a' ]);
+            expect(spec.spy).toHaveBeenCalledWithAt(0, ['a']);
         });
 
         it('negative', () => {
