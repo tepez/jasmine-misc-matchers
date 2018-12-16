@@ -1,6 +1,6 @@
 {
   "name": "@tepez/jasmine-misc-matchers",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Various matchers for jasmine2",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
