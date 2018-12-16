@@ -84,15 +84,16 @@ export interface IUnhandledRejectionsSpec {
  */
 export function testUnhandledRejections(): void {
     beforeEach(function (this: IUnhandledRejectionsSpec) {
-        this.unhandledRejection.actual = [];
-        this.unhandledRejection.expected = [];
-
-        this.unhandledRejection.listener = (reason, promise) => {
-            console.log('Unhandled Rejection at: Promise', promise, 'reason:', reason);
-            this.unhandledRejection.actual.push({
-                reason,
-                promise,
-            })
+        this.unhandledRejection = {
+            actual: [],
+            expected: [],
+            listener: (reason, promise) => {
+                console.log('Unhandled Rejection at: Promise', promise, 'reason:', reason);
+                this.unhandledRejection.actual.push({
+                    reason,
+                    promise,
+                })
+            }
         };
 
         process.on(
