@@ -3,5 +3,5 @@
 /reports/
 /src/
 /tsconfig.json
-/gulpfile.js
+/gulpfile.ts
 /.travis.yml

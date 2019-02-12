@@ -9,8 +9,8 @@ interface ISpec {
 
 describe('toHaveBeenCalledWithAt fails specs', () => {
     let spec: ISpec;
-    afterEach(() => spec = null);
-    beforeEach(function () {
+    afterEach((): void => spec = null);
+    beforeEach(function (this: ISpec) {
         spec = this;
     });
 

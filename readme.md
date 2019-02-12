@@ -60,7 +60,6 @@ Tests weather a string is a JSON serialization of given `obj`.
 * mockClock(date: Date): void
 * updateDate(date: Date): void
 * getJsonRep(obj: any): any
-* testUnhandledRejections(): void
 
 
 * executeSpecFile(filePath: string): Promise<jasmine.CustomReporterResult[]>

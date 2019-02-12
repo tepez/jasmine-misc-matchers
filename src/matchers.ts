@@ -25,13 +25,27 @@ declare global {
     }
 }
 
+function getSpyName(spy: AllSpyTypes): string {
+    if (isJasmineSpy(spy)) {
+        const identity = (spy as any).and.identity;
+
+        // jasmine3: identity is a string
+        if (typeof identity === 'string') {
+            return identity;
+        }
+
+        // jasmine2: identity is a function
+        return identity();
+    } else {
+        return (spy as any).displayName
+    }
+}
 
 export const matchers: CustomMatcherFactories = {
     toHaveBeenCalledWithAt: function () {
         return {
             compare: function (spy: AllSpyTypes, callIndex: number, expectedArgs: any[]) {
                 let actualArgs: any[];
-                let name: string;
                 let wasCalled: boolean;
                 let callCount: number;
 
@@ -40,14 +54,11 @@ export const matchers: CustomMatcherFactories = {
                 }
 
                 if (isJasmineSpy(spy)) {
-                    name = (<any>spy).and.identity();
                     callCount = spy.calls.count();
                     wasCalled = callCount > callIndex;
                     if (wasCalled) actualArgs = spy.calls.argsFor(callIndex);
 
                 } else if (isSinonSpy(spy)) {
-                    name = (spy as any).displayName;
-
                     callCount = spy.callCount;
                     wasCalled = callCount > callIndex;
 
@@ -56,6 +67,8 @@ export const matchers: CustomMatcherFactories = {
                 } else {
                     throw new Error(`toHaveBeenCalledWithAt: must be called on a spy, got ${jasmine.pp(spy)}`);
                 }
+
+                const name = getSpyName(spy);
 
                 const diffBuilder = new jasmine.DiffBuilder();
 
@@ -89,7 +102,6 @@ export const matchers: CustomMatcherFactories = {
     toHaveBeenCalledTimes: function () {
         return {
             compare: function (spy: AllSpyTypes, expected: number) {
-                let name: string;
                 let actualCallTimes: number;
 
                 if (!Number.isFinite(expected) || expected < 0 || !Number.isSafeInteger(expected)) {
@@ -97,15 +109,15 @@ export const matchers: CustomMatcherFactories = {
                 }
 
                 if (isJasmineSpy(spy)) {
-                    name = (<any>spy).and.identity();
                     actualCallTimes = spy.calls.count()
 
                 } else if (isSinonSpy(spy)) {
-                    name = (spy as any).displayName;
                     actualCallTimes = spy.callCount;
                 } else {
                     throw new Error(`toHaveBeenCalledWithAt: must be called on a spy, got ${jasmine.pp(spy)}`);
                 }
+
+                const name = getSpyName(spy);
 
                 const ret: jasmine.CustomMatcherResult = {
                     pass: actualCallTimes === expected,
@@ -124,9 +136,9 @@ export const matchers: CustomMatcherFactories = {
 };
 
 // return `any` because @types/jasmine doesn't allow creating custom matchers yet (at 2.8.6)
-export function JSONStringMatcher(obj): any {
+export function JSONStringMatcher(obj: any): any {
     return {
-        asymmetricMatch: function (json) {
+        asymmetricMatch: function (json: string) {
             let parsedJson;
             try {
                 parsedJson = JSON.parse(json)

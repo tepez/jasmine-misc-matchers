@@ -9,7 +9,7 @@ const Jasmine = require('jasmine');
  */
 
 export function setSpecTimeout(timeout: number): void {
-    let originalTimeout;
+    let originalTimeout: number;
 
     beforeEach(() => {
         originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
@@ -62,55 +62,6 @@ export function getJsonRep(obj: any): any {
     return JSON.parse(JSON.stringify(obj));
 }
 
-
-export interface IUnhandledRejectionsSpec {
-    unhandledRejection: {
-        actual: {
-            reason: any
-            promise: Promise<any>
-        }[]
-        expected: {
-            reason: any
-            promise: Promise<any>
-        }[]
-        // NodeJS.UnhandledRejectionListener
-        listener: (reason: any, promise: Promise<any>) => void
-    }
-}
-
-/**
- * Make sure there are no (or just as expected) unhandled promises rejections during
- * current jasmine scope
- */
-export function testUnhandledRejections(): void {
-    beforeEach(function (this: IUnhandledRejectionsSpec) {
-        this.unhandledRejection = {
-            actual: [],
-            expected: [],
-            listener: (reason, promise) => {
-                console.log('Unhandled Rejection at: Promise', promise, 'reason:', reason);
-                this.unhandledRejection.actual.push({
-                    reason,
-                    promise,
-                })
-            }
-        };
-
-        process.on(
-            'unhandledRejection',
-            this.unhandledRejection.listener,
-        );
-    });
-
-    afterEach(function (this: IUnhandledRejectionsSpec) {
-        process.removeListener(
-            'unhandledRejection',
-            this.unhandledRejection.listener,
-        );
-        expect(this.unhandledRejection.actual).toEqual(this.unhandledRejection.expected);
-    });
-}
-
 /**
  * This reporter accumulates the spec results of a jasmine run
  */
@@ -154,12 +105,18 @@ export async function executeSpecFile(filePath: string): Promise<jasmine.CustomR
         'xit',
     ];
 
-    const beforeGlobal = {};
+    const beforeGlobal: {
+        [key: string]: any
+    } = {};
     for (const key of globalVariables) {
-        beforeGlobal[key] = global[key];
+        beforeGlobal[key] = (global as any)[key];
     }
 
     const newJasmine = new Jasmine();
+
+    newJasmine.loadConfig({
+        random: false,
+    });
 
     const specs: jasmine.CustomReporterResult[] = [];
     newJasmine.addReporter(new SpecExtractorReporter(specs));
@@ -169,9 +126,9 @@ export async function executeSpecFile(filePath: string): Promise<jasmine.CustomR
     ]);
 
     await new Promise((resolve) => {
-        newJasmine.onComplete((passed) => {
+        newJasmine.onComplete(() => {
             for (const key of globalVariables) {
-                global[key] = beforeGlobal[key]
+                (global as any)[key] = beforeGlobal[key]
             }
 
             resolve();

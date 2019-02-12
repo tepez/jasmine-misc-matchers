@@ -10,9 +10,10 @@ interface ISpec {
 }
 
 describe('jasmine-misc-matchers', () => {
+    // @ts-ignore (spec is never used)
     let spec: ISpec;
-    afterEach(() => spec = null);
-    beforeEach(function () {
+    afterEach((): void => spec = null);
+    beforeEach(function (this: ISpec) {
         spec = this;
         jasmine.addMatchers(matchers);
     });
@@ -167,7 +168,6 @@ describe('jasmine-misc-matchers', () => {
             );
         });
     });
-
 
     it('JSONStringMatcher', () => {
         expect('{"a": "b"}').toEqual(JSONStringMatcher({ a: 'b' }));
