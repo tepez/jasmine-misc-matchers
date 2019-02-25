@@ -1,4 +1,4 @@
-import { executeSpecFile } from './utils'
+import { executeSpecFile } from './utils-node'
 
 describe('utils', () => {
     // We used to have a testUnhandledRejections method

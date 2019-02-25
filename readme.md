@@ -66,3 +66,5 @@ Tests weather a string is a JSON serialization of given `obj`.
 
 Execute the specs a jasmine specs file at given path and return the spec results.
 Very useful for testing failures of custom matchers.
+
+Available only under Nodejs

@@ -4,6 +4,7 @@
   "description": "Various matchers for jasmine2",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "browser": "dist/index-browser.js",
   "scripts": {
     "build": "npx gulp build",
     "test": "npx gulp build-unit-test",

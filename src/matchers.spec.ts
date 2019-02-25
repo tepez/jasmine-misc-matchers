@@ -2,7 +2,7 @@ import Sinon = require('sinon');
 import * as _ from 'lodash'
 import { JSONStringMatcher, matchers } from './matchers'
 import { AllSpyTypes } from './spies';
-import { executeSpecFile } from './utils'
+import { executeSpecFile } from './utils-node'
 
 
 interface ISpec {
