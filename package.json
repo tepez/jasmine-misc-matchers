@@ -34,7 +34,8 @@
     "sinon": "^7.2.3"
   },
   "dependencies": {
-    "@types/jasmine": "^3.3.9"
+    "@types/jasmine": "^3.3.9",
+    "tslib": "^1.10.0"
   },
   "peerDependencies": {
     "jasmine": "^3.0.0"
