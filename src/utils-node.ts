@@ -1,3 +1,6 @@
+import { setSpecTimeout } from './utils'
+
+
 const Jasmine = require('jasmine');
 
 /**
@@ -74,4 +77,27 @@ export async function executeSpecFile(filePath: string): Promise<jasmine.CustomR
     });
 
     return specs;
+}
+
+/**
+ * Return true if running the process in debug mode
+ *
+ * https://stackoverflow.com/a/45074641/1705056
+ */
+function isDebug(): boolean {
+    if (typeof process === 'undefined') return false;
+
+    return /--debug|--inspect/.test(process.execArgv.join(' '));
+}
+
+/**
+ * Set very long timeout if running the specs in debug
+ *
+ * This allows to debug the specs without jasmine failing them due to timeout
+ */
+export function setLongTimeoutOnDebug() {
+    if (isDebug()) {
+        console.log(`jasmine-misc-matchers: Setting long specs timeout because running specs in debug mode`);
+        setSpecTimeout(999999);
+    }
 }
