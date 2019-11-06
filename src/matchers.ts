@@ -136,7 +136,7 @@ export const matchers: CustomMatcherFactories = {
 };
 
 // return `any` because @types/jasmine doesn't allow creating custom matchers yet (at 2.8.6)
-export function JSONStringMatcher(obj: any): any {
+export function JSONStringMatcher<T>(obj: T): any {
     return {
         asymmetricMatch: function (json: string) {
             let parsedJson;
