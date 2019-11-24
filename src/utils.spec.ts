@@ -16,15 +16,7 @@ describe('utils', () => {
                     [
                         {
                             matcherName: '',
-                            message: 'Error: mock error',
-                            stack: jasmine.anything() as any,
-                            passed: false,
-                            expected: '',
-                            actual: '',
-                        },
-                        {
-                            matcherName: '',
-                            message: 'Failed: mock error',
+                            message: 'Unhandled promise rejection: Error: mock error',
                             stack: jasmine.anything() as any,
                             passed: false,
                             expected: '',
