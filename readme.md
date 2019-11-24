@@ -72,3 +72,7 @@ Very useful for testing failures of custom matchers.
 * setLongTimeoutOnDebug()
 
 Set very long timeout if running the specs in debug.
+
+* isDebug()
+
+Return true if runnig in debug mode.

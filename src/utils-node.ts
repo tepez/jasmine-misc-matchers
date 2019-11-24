@@ -29,7 +29,7 @@ export async function executeSpecFile(filePath: string): Promise<jasmine.CustomR
         console.error(`jasmine-misc-matchers could not require "jasmine". It should be installed if you want to use executeSpecFile`);
         throw err;
     }
-    
+
     // Save the global state before the second jasmine instance modifies it
     const globalVariables = [
         'jasmine',
@@ -90,7 +90,7 @@ export async function executeSpecFile(filePath: string): Promise<jasmine.CustomR
  *
  * https://stackoverflow.com/a/45074641/1705056
  */
-function isDebug(): boolean {
+export function isDebug(): boolean {
     if (typeof process === 'undefined') return false;
 
     return /--debug|--inspect/.test(process.execArgv.join(' '));
