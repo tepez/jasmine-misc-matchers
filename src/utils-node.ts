@@ -1,8 +1,6 @@
 import { setSpecTimeout } from './utils'
 
 
-const Jasmine = require('jasmine');
-
 /**
  * This reporter accumulates the spec results of a jasmine run
  */
@@ -24,6 +22,14 @@ class SpecExtractorReporter implements jasmine.CustomReporter {
  * @param filePath
  */
 export async function executeSpecFile(filePath: string): Promise<jasmine.CustomReporterResult[]> {
+    let Jasmine;
+    try {
+        Jasmine = require('jasmine');
+    } catch (err) {
+        console.error(`jasmine-misc-matchers could not require "jasmine". It should be installed if you want to use executeSpecFile`);
+        throw err;
+    }
+    
     // Save the global state before the second jasmine instance modifies it
     const globalVariables = [
         'jasmine',
