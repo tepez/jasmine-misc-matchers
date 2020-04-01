@@ -1,3 +1,4 @@
+import './diffBuilder'
 import { AllSpyTypes, isJasmineSpy, isSinonSpy } from './spies'
 import CustomMatcherFactories = jasmine.CustomMatcherFactories;
 
@@ -9,18 +10,6 @@ declare global {
 
             // No need to have toHaveBeenCalledTimes since it's part of the jasmine core API
             // we just override it to add support for sinon spies
-        }
-
-        // Add typings for undocumented DiffBuilder
-        // https://github.com/jasmine/jasmine/blob/v3.3.0/src/core/matchers/DiffBuilder.js#L1
-        class DiffBuilder {
-            getMessage(): string
-        }
-
-        interface MatchersUtil {
-            // equals accept a DiffBuilder as optional last argument
-            // https://github.com/jasmine/jasmine/blob/v3.3.0/src/core/matchers/matchersUtil.js#L84
-            equals(a: any, b: any, customTesters?: CustomEqualityTester[], builder?: DiffBuilder): boolean;
         }
     }
 }
