@@ -1,3 +1,4 @@
+import * as _ from 'lodash'
 import './diffBuilder'
 import { AllSpyTypes, isJasmineSpy, isSinonSpy } from './spies'
 import CustomMatcherFactories = jasmine.CustomMatcherFactories;
@@ -7,6 +8,10 @@ declare global {
     namespace jasmine {
         interface Matchers<T> {
             toHaveBeenCalledWithAt(callIndex: number, expectedArgs: any[]): void;
+
+            toHaveOwnProperty(key: string): void
+
+            toHaveExactKeys(...keys: string[]): void
 
             // No need to have toHaveBeenCalledTimes since it's part of the jasmine core API
             // we just override it to add support for sinon spies
@@ -117,6 +122,55 @@ export const matchers: CustomMatcherFactories = {
                 } else {
                     ret.message = `Expected spy ${name} to be called ${expected} times, but it was called ${actualCallTimes} times`;
                 }
+
+                return ret;
+            },
+        };
+    },
+
+    toHaveOwnProperty: function () {
+        return {
+            compare: function (obj: object, key: string) {
+                const ret: jasmine.CustomMatcherResult = {
+                    pass: Object.prototype.hasOwnProperty.call(obj, key),
+                };
+
+                ret.message = ret.pass
+                    ? `Expected ${jasmine.pp(obj)} NOT to have own property ${key}`
+                    : `Expected ${jasmine.pp(obj)} to have own property ${key}`;
+
+                return ret;
+            },
+        };
+    },
+
+    toHaveExactKeys: function () {
+        return {
+            compare: function (obj: object, ...expectedKeys: string[]) {
+                const diffBuilder = new jasmine.DiffBuilder();
+
+                const actualKeys = Object.keys(obj).sort();
+
+                const pass = jasmine.matchersUtil.equals(
+                    {
+                        missing: _.difference(expectedKeys, actualKeys),
+                        extra: _.difference(actualKeys, expectedKeys),
+                    },
+                    {
+                        missing: [],
+                        extra: [],
+                    },
+                    null,
+                    diffBuilder,
+                );
+
+                const ret: jasmine.CustomMatcherResult = {
+                    pass,
+                };
+
+                ret.message = ret.pass
+                    ? `Expected ${jasmine.pp(obj)} NOT to have keys ${expectedKeys.join(',')}`
+                    : `Expected ${jasmine.pp(obj)} to have keys ${expectedKeys.join(',')}, but ${diffBuilder.getMessage()}`;
 
                 return ret;
             },

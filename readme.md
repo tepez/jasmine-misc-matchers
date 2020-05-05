@@ -46,7 +46,10 @@ Expects the call arguments of the `callIndex` call to a spied-on function to equ
 
 Expects the spy to have been called exactly
 
+#### Misc
 
+* toHaveOwnProperties
+* toHaveExactKeys
 
 ### Custom asymmetric equality tester
 

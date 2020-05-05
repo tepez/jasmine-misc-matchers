@@ -169,6 +169,127 @@ describe('jasmine-misc-matchers', () => {
         });
     });
 
+    describe('.toHaveExactKeys()', () => {
+        it('success specs', () => {
+            expect({}).toHaveExactKeys();
+
+            expect({
+                key1: 'value 1',
+                key2: 'value 2',
+            }).toHaveExactKeys('key1', 'key2');
+
+            expect({
+                key1: 'value 1',
+                key2: 'value 2',
+            }).not.toHaveExactKeys('key1', 'key2', 'key3');
+        });
+
+        it('fail specs', async () => {
+            const specs = await executeSpecFile('./src/failSpecs/toHaveExactKeys.ts');
+
+            expect(specs.map((spec) => spec.failedExpectations)).toEqual(
+                [
+                    [
+                        {
+                            matcherName: 'toHaveExactKeys',
+                            message: `Expected Object({  }) to have keys key1,key2, but Expected $.missing.length = 2 to equal 0.
+Unexpected $.missing[0] = 'key1' in array.
+Unexpected $.missing[1] = 'key2' in array.`,
+                            stack: jasmine.anything(),
+                            passed: false,
+                            expected: [
+                                'key1',
+                                'key2',
+                            ] as any,
+                            actual: jasmine.anything() as any,
+                        },
+                        {
+                            matcherName: 'toHaveExactKeys',
+                            message: `Expected Object({ key1: 'value', key2: 'value', key3: 'value' }) to have keys key1,key2, but Expected $.extra.length = 1 to equal 0.
+Unexpected $.extra[0] = 'key3' in array.`,
+                            stack: jasmine.anything(),
+                            passed: false,
+                            expected: [
+                                'key1',
+                                'key2',
+                            ] as any,
+                            actual: jasmine.anything() as any,
+                        },
+                    ],
+                    [
+                        {
+                            matcherName: 'toHaveExactKeys',
+                            message: `Expected Object({ key1: 'value', key2: 'value' }) NOT to have keys key1,key2`,
+                            stack: jasmine.anything(),
+                            passed: false,
+                            expected: [
+                                'key1',
+                                'key2',
+                            ] as any,
+                            actual: jasmine.anything() as any,
+                        },
+                    ],
+                ],
+            );
+        });
+    });
+
+    describe('.toHaveOwnProperty()', () => {
+        it('success specs', () => {
+            expect({
+                key1: 'value 1',
+                key2: 'value 2',
+            }).toHaveOwnProperty('key1');
+
+            expect({
+                key1: 'value 1',
+                key2: 'value 2',
+            }).toHaveOwnProperty('key2');
+
+            expect({
+                key1: 'value 1',
+                key2: 'value 2',
+            }).not.toHaveOwnProperty('key3');
+        });
+
+        it('fail specs', async () => {
+            const specs = await executeSpecFile('./src/failSpecs/toHaveOwnProperty.ts');
+
+            expect(specs.map((spec) => spec.failedExpectations)).toEqual(
+                [
+                    [
+                        {
+                            matcherName: 'toHaveOwnProperty',
+                            message: `Expected Object({  }) to have own property key1`,
+                            stack: jasmine.anything(),
+                            passed: false,
+                            expected: 'key1',
+                            actual: jasmine.anything() as any,
+                        },
+                        {
+                            matcherName: 'toHaveOwnProperty',
+                            message: `Expected Object({ key2: 'value', key3: 'value' }) to have own property key1`,
+                            stack: jasmine.anything(),
+                            passed: false,
+                            expected: 'key1',
+                            actual: jasmine.anything() as any,
+                        },
+                    ],
+                    [
+                        {
+                            matcherName: 'toHaveOwnProperty',
+                            message: `Expected Object({ key1: 'value', key2: 'value' }) NOT to have own property key1`,
+                            stack: jasmine.anything(),
+                            passed: false,
+                            expected: 'key1',
+                            actual: jasmine.anything() as any,
+                        },
+                    ],
+                ],
+            );
+        });
+    });
+
     it('JSONStringMatcher', () => {
         expect('{"a": "b"}').toEqual(JSONStringMatcher({ a: 'b' }));
         expect('{"a": "b"}').not.toEqual(JSONStringMatcher({ a: 'c' }));
