@@ -2,42 +2,42 @@
   "name": "@tepez/jasmine-misc-matchers",
   "version": "0.4.6",
   "description": "Various matchers for jasmine2",
+  "homepage": "https://github.com/tepez/jasmine-misc-matchers#readme",
+  "bugs": {
+    "url": "https://github.com/tepez/jasmine-misc-matchers/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tepez/jasmine-misc-matchers.git"
+  },
+  "license": "MIT",
+  "author": "Tom Yam <tomyam@tepez.co.il>",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
   "browser": "dist/index-browser.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "npx gulp build",
     "test": "npx gulp build-unit-test",
     "test-debug": "npx --node-arg=--inspect-brk gulp build-unit-test",
     "update": "npx gulp build && npx np --no-publish --no-yarn"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/tepez/jasmine-misc-matchers.git"
-  },
-  "author": "Tom Yam <tomyam@tepez.co.il>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/tepez/jasmine-misc-matchers/issues"
-  },
-  "homepage": "https://github.com/tepez/jasmine-misc-matchers#readme",
-  "devDependencies": {
-    "@tepez/typescript-build-gulp-tasks": "^5.1.1",
-    "@tepez/typescript-common": "^0.2.1",
-    "@types/gulp": "^4.0.6",
-    "@types/lodash": "^4.14.149",
-    "@types/node": "^8.10.59",
-    "@types/sinon": "5.0.5",
-    "gulp": "^4.0.2",
-    "lodash": "^4.17.15",
-    "np": "4.0.2",
-    "sinon": "^7.5.0"
-  },
   "dependencies": {
-    "@types/jasmine": "^3.5.0",
-    "tslib": "^1.10.0"
+    "@types/jasmine": "^3.5.10",
+    "lodash": "^4.17.15",
+    "tslib": "^1.11.1"
+  },
+  "devDependencies": {
+    "@tepez/typescript-build-gulp-tasks": "^6.0.1",
+    "@tepez/typescript-common": "^0.2.2",
+    "@types/gulp": "^4.0.6",
+    "@types/lodash": "^4.14.150",
+    "@types/node": "*",
+    "@types/sinon": "9.0.0",
+    "gulp": "^4.0.2",
+    "np": "6.2.3",
+    "sinon": "^9.0.2"
   },
   "peerDependencies": {
-    "jasmine": "^3.0.0"
+    "jasmine": "^3.5.0"
   }
 }
