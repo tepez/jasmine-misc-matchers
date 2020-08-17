@@ -5,16 +5,9 @@ import { AllSpyTypes } from './spies';
 import { executeSpecFile } from './utils-node'
 
 
-interface ISpec {
-
-}
 
 describe('jasmine-misc-matchers', () => {
-    // @ts-ignore (spec is never used)
-    let spec: ISpec;
-    afterEach((): void => spec = null);
-    beforeEach(function (this: ISpec) {
-        spec = this;
+    beforeEach(() => {
         jasmine.addMatchers(matchers);
     });
 
