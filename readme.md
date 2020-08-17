@@ -67,6 +67,12 @@ Tests weather a string is a JSON serialization of given `obj`.
 
 #### Nodejs specific functions
 
+* toEqualHtml
+
+Compares html using [html-differ](https://github.com/bem/html-differ/).
+
+Node.js only because html-differ cannot run on the browser.
+
 * executeSpecFile(filePath: string): Promise<jasmine.CustomReporterResult[]>
 
 Execute the specs a jasmine specs file at given path and return the spec results.
