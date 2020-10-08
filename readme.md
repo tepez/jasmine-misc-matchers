@@ -84,4 +84,8 @@ Set very long timeout if running the specs in debug.
 
 * isDebug()
 
-Return true if runnig in debug mode.
+Return true if running in debug mode.
+
+* backupAndRestoreEnv()
+
+Copy process.env before each spec and restore it after it

@@ -1,3 +1,4 @@
+import * as _ from 'lodash'
 import { setSpecTimeout } from './utils'
 
 
@@ -101,9 +102,24 @@ export function isDebug(): boolean {
  *
  * This allows to debug the specs without jasmine failing them due to timeout
  */
-export function setLongTimeoutOnDebug() {
+export function setLongTimeoutOnDebug(): void {
     if (isDebug()) {
         console.log(`jasmine-misc-matchers: Setting long specs timeout because running specs in debug mode`);
         setSpecTimeout(999999);
     }
+}
+
+/**
+ * Copy process.env before each spec and restore it after it
+ */
+export function backupAndRestoreEnv(): void {
+    let env: NodeJS.ProcessEnv;
+
+    beforeEach(() => {
+        env = _.cloneDeep(process.env);
+    });
+
+    afterEach(() => {
+        process.env = env;
+    });
 }
