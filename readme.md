@@ -71,7 +71,9 @@ Tests weather a string is a JSON serialization of given `obj`.
 
 Compares html using [html-differ](https://github.com/bem/html-differ/).
 
-Node.js only because html-differ cannot run on the browser.
+Node.js only by default because html-differ needs some mocking to run on the browser.
+
+See [src/browser-chalk.js](./src/browser-chalk.ts) for details.
 
 * executeSpecFile(filePath: string): Promise<jasmine.CustomReporterResult[]>
 
