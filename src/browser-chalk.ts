@@ -1,3 +1,6 @@
+// Without this typescript won't require tslib
+export {};
+
 /*
     This is can be used to make html-differ work in the browser using the NormalModuleReplacementPlugin
     webpack plugin:
