@@ -74,7 +74,7 @@ export async function executeSpecFile(filePath: string): Promise<jasmine.CustomR
         filePath,
     ]);
 
-    await new Promise((resolve) => {
+    await new Promise<void>((resolve) => {
         newJasmine.onComplete(() => {
             for (const key of globalVariables) {
                 (global as any)[key] = beforeGlobal[key]
