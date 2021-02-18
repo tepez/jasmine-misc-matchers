@@ -1,3 +1,4 @@
+import * as Inspector from 'inspector'
 import * as _ from 'lodash'
 import { setSpecTimeout } from './utils'
 
@@ -90,11 +91,13 @@ export async function executeSpecFile(filePath: string): Promise<jasmine.CustomR
  * Return true if running the process in debug mode
  *
  * https://stackoverflow.com/a/45074641/1705056
+ * https://github.com/IonicaBizau/debug-mode/blob/master/lib/index.js#L12
  */
 export function isDebug(): boolean {
     if (typeof process === 'undefined') return false;
 
-    return /--debug|--inspect/.test(process.execArgv.join(' '));
+    return /--debug|--inspect/.test(process.execArgv.join(' '))
+        || !!Inspector.url();
 }
 
 /**
