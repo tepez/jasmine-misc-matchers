@@ -2,6 +2,7 @@ import { IHtmlDifferOptions, IReportOptions } from 'html-differ';
 import * as _ from 'lodash'
 import { compareHtml } from '../html-differ/matcher';
 import CustomMatcherFactories = jasmine.CustomMatcherFactories;
+import CustomMatcherResult = jasmine.CustomMatcherResult;
 
 
 let _$: JQueryStatic = typeof $ === 'undefined'
@@ -40,11 +41,30 @@ function browserTagCaseIndependentHtml(html: string): string {
     return _$('<div/>').append(html).html()
 }
 
-const hasProperty = function (actualValue: string, expectedValue: string): boolean {
+const compareProperty = function (actualValue: string, expectedValue: string): boolean {
     return expectedValue === undefined
         ? actualValue !== undefined
         : actualValue === expectedValue;
 };
+
+
+const matcherResult = (
+    selector: Selector,
+    pass: boolean,
+    expectedMessage: string,
+    actualMessage: string,
+): CustomMatcherResult => {
+    const ret: jasmine.CustomMatcherResult = {
+        pass,
+    };
+
+    ret.message = ret.pass
+        ? `Expected ${jasmine.pp(selector)} NOT to ${expectedMessage}`
+        : `Expected ${jasmine.pp(selector)} to ${expectedMessage}, but it ${actualMessage}`;
+
+    return ret;
+}
+
 
 export const jqueryMatchers: CustomMatcherFactories = {
     toHaveClass: function () {
@@ -129,32 +149,56 @@ export const jqueryMatchers: CustomMatcherFactories = {
 
     toHaveLength: function () {
         return {
-            compare: function (actual: Selector, length: number) {
-                return { pass: _$(actual).length === length }
+            compare: function (actual: Selector, expectedValue: number) {
+                const actualValue = _$(actual).length;
+                return matcherResult(
+                    actual,
+                    actualValue === expectedValue,
+                    `have length ${expectedValue}`,
+                    `has length ${actualValue}`,
+                );
             },
         }
     },
 
     toHaveAttr: function () {
         return {
-            compare: function (actual: Selector, attributeName: string, expectedAttributeValue: any) {
-                return { pass: hasProperty(_$(actual).attr(attributeName), expectedAttributeValue) }
+            compare: function (actual: Selector, attributeName: string, expectedValue: any) {
+                const actualValue = _$(actual).attr(attributeName);
+                return matcherResult(
+                    actual,
+                    compareProperty(actualValue, expectedValue),
+                    `have attribute ${attributeName}=${expectedValue}`,
+                    `has attribute ${attributeName}=${actualValue}`,
+                );
             },
         }
     },
 
     toHaveProp: function () {
         return {
-            compare: function (actual: Selector, propertyName: string, expectedPropertyValue: any) {
-                return { pass: hasProperty(_$(actual).prop(propertyName), expectedPropertyValue) }
+            compare: function (actual: Selector, propertyName: string, expectedValue: any) {
+                const actualValue = _$(actual).prop(propertyName);
+                return matcherResult(
+                    actual,
+                    compareProperty(actualValue, expectedValue),
+                    `have property ${propertyName}=${expectedValue}`,
+                    `has property ${propertyName}=${actualValue}`,
+                );
             },
         }
     },
 
     toHaveId: function () {
         return {
-            compare: function (actual: Selector, id: string) {
-                return { pass: _$(actual).attr('id') === id }
+            compare: function (actual: Selector, expectedValue: string) {
+                const actualValue = _$(actual).attr('id');
+                return matcherResult(
+                    actual,
+                    actualValue === expectedValue,
+                    `have id ${expectedValue}`,
+                    `has id ${actualValue}`,
+                );
             },
         }
     },
@@ -190,14 +234,25 @@ export const jqueryMatchers: CustomMatcherFactories = {
 
     toHaveText: function () {
         return {
-            compare: function (actual: Selector, text: string | RegExp) {
+            compare: function (actual: Selector, expectedValue: string | RegExp) {
                 const actualText = _$(actual).text()
                 const trimmedText = _$.trim(actualText)
 
-                if (_.isRegExp(text)) {
-                    return { pass: text.test(actualText) || text.test(trimmedText) }
+                if (_.isRegExp(expectedValue)) {
+                    return matcherResult(
+                        actual,
+                        expectedValue.test(actualText) || expectedValue.test(trimmedText),
+                        `have text matched by ${expectedValue}`,
+                        `has text ${actualText}`,
+                    );
+
                 } else {
-                    return { pass: (actualText === text || trimmedText === text) }
+                    return matcherResult(
+                        actual,
+                        actualText === expectedValue || trimmedText === expectedValue,
+                        `have text ${expectedValue}`,
+                        `has text ${actualText}`,
+                    );
                 }
             },
         }
@@ -205,13 +260,22 @@ export const jqueryMatchers: CustomMatcherFactories = {
 
     toContainText: function () {
         return {
-            compare: function (actual: Selector, text: string | RegExp) {
+            compare: function (actual: Selector, expectedValue: string | RegExp) {
                 const trimmedText = _$.trim(_$(actual).text())
-
-                if (_.isRegExp(text)) {
-                    return { pass: text.test(trimmedText) }
+                if (_.isRegExp(expectedValue)) {
+                    return matcherResult(
+                        actual,
+                        expectedValue.test(trimmedText),
+                        `have text matched by ${expectedValue}`,
+                        `has (trimmed) text ${trimmedText}`,
+                    );
                 } else {
-                    return { pass: trimmedText.indexOf(text) !== -1 }
+                    return matcherResult(
+                        actual,
+                        trimmedText.indexOf(expectedValue) !== -1,
+                        `have text ${expectedValue}`,
+                        `has (trimmed) text ${trimmedText}`,
+                    );
                 }
             },
         }
@@ -219,8 +283,14 @@ export const jqueryMatchers: CustomMatcherFactories = {
 
     toHaveValue: function () {
         return {
-            compare: function (actual: Selector, value: any) {
-                return { pass: _$(actual).val() === value }
+            compare: function (actual: Selector, expectedValue: any) {
+                const actualValue = _$(actual).val();
+                return matcherResult(
+                    actual,
+                    actualValue === expectedValue,
+                    `have value ${expectedValue}`,
+                    `has value ${actualValue}`,
+                );
             },
         }
     },
@@ -228,7 +298,13 @@ export const jqueryMatchers: CustomMatcherFactories = {
     toHaveData: function () {
         return {
             compare: function (actual: Selector, key: string, expectedValue: any) {
-                return { pass: hasProperty(_$(actual).data(key), expectedValue) }
+                const actualValue = _$(actual).data(key);
+                return matcherResult(
+                    actual,
+                    compareProperty(actualValue, expectedValue),
+                    `have data ${key}=${expectedValue}`,
+                    `has data ${key}=${actualValue}`,
+                );
             },
         }
     },
