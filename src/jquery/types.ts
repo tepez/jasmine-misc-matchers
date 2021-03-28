@@ -1,4 +1,6 @@
 // Avoid TS2669: Augmentations for the global scope can only be directly nested in external modules or ambient module declarations
+import { IHtmlDifferOptions, IReportOptions } from 'html-differ';
+
 export {}
 
 // Based on https://github.com/DefinitelyTyped/DefinitelyTyped/blob/0aa7d070e915beb8e1debaa786755beed317465e/types/jasmine-jquery/index.d.ts#L1
@@ -113,7 +115,11 @@ declare global {
              * // returns true
              * expect($('<div><span></span></div>')).toHaveHtml('<span></span>')
              */
-            toHaveHtml(html: string): boolean
+            toHaveHtml(
+                html: string,
+                differOptions?: IHtmlDifferOptions,
+                printOptions?: IReportOptions,
+            ): boolean
 
             /**
              * Check if DOM element contains the specified HTML.

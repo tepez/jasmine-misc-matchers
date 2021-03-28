@@ -18,33 +18,35 @@ declare global {
     }
 }
 
+export const compareHtml = (
+    actualHtml: string,
+    expectedHtml: string,
+    differOptions: IHtmlDifferOptions,
+    printOptions: IReportOptions,
+): jasmine.CustomMatcherResult => {
+    const differ = new HtmlDiffer(differOptions)
+
+    const diff = differ.diffHtml(actualHtml, expectedHtml);
+
+    // Check if equal without running diff again (as differ.isEqual would do)
+    // https://github.com/bem/html-differ/blob/v1.4.0/lib/index.js#L61
+    const isEqual = diff.length === 1
+        && !diff[0].added
+        && !diff[0].removed;
+
+    return {
+        pass: isEqual,
+        message: isEqual
+            ? `Expected HTML\n${actualHtml}\nNOT to equal to HTML\n${expectedHtml}`
+            : `Expected HTML\n${actualHtml}\nto equal to HTML\n${expectedHtml}\n${getDiffText(diff, printOptions)}`,
+    };
+}
+
 export const htmlDifferMatcher: CustomMatcherFactories = {
     toEqualHtml: () => {
         {
             return {
-                compare: (
-                    html: string,
-                    expectedHtml: string,
-                    differOptions: IHtmlDifferOptions,
-                    printOptions: IReportOptions,
-                ): jasmine.CustomMatcherResult => {
-                    const differ = new HtmlDiffer(differOptions)
-
-                    const diff = differ.diffHtml(html, expectedHtml);
-
-                    // Check if equal without running diff again (as differ.isEqual would do)
-                    // https://github.com/bem/html-differ/blob/v1.4.0/lib/index.js#L61
-                    const isEqual = diff.length === 1
-                        && !diff[0].added
-                        && !diff[0].removed;
-
-                    return {
-                        pass: isEqual,
-                        message: isEqual
-                            ? `Expected HTML\n${html}\nNOT to equal to HTML\n${expectedHtml}`
-                            : `Expected HTML\n${html}\nto equal to HTML\n${expectedHtml}\n${getDiffText(diff, printOptions)}`,
-                    };
-                },
+                compare: compareHtml,
             };
         }
     },

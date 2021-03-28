@@ -1,4 +1,6 @@
+import { IHtmlDifferOptions, IReportOptions } from 'html-differ';
 import * as _ from 'lodash'
+import { compareHtml } from '../html-differ/matcher';
 import CustomMatcherFactories = jasmine.CustomMatcherFactories;
 
 
@@ -159,8 +161,18 @@ export const jqueryMatchers: CustomMatcherFactories = {
 
     toHaveHtml: function () {
         return {
-            compare: function (actual: Selector, html: string) {
-                return { pass: _$(actual).html() === browserTagCaseIndependentHtml(html) }
+            compare: function (
+                actual: Selector,
+                html: string,
+                differOptions?: IHtmlDifferOptions,
+                printOptions?: IReportOptions,
+            ) {
+                return compareHtml(
+                    _$(actual).html(),
+                    html,
+                    differOptions,
+                    printOptions,
+                );
             },
         }
     },
