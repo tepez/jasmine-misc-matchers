@@ -22,13 +22,13 @@
     "update": "npx gulp build && npx np --no-publish --no-yarn"
   },
   "dependencies": {
-    "html-differ": "^1.4.0",
     "@types/jasmine": "^3.5.10",
+    "@types/jquery": "^3.5.5",
+    "html-differ": "^1.4.0",
     "lodash": "^4.17.15",
     "tslib": "^2.0.0"
   },
   "devDependencies": {
-    "strip-ansi": "^6.0.0",
     "@tepez/typescript-build-gulp-tasks": "^6.0.1",
     "@tepez/typescript-common": "^0.2.2",
     "@types/gulp": "^4.0.6",
@@ -37,7 +37,8 @@
     "@types/sinon": "9.0.0",
     "gulp": "^4.0.2",
     "np": "6.2.3",
-    "sinon": "^9.0.2"
+    "sinon": "^9.0.2",
+    "strip-ansi": "^6.0.0"
   },
   "peerDependencies": {
     "jasmine": "^3.5.0"
