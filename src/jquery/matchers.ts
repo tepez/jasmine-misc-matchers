@@ -343,7 +343,7 @@ export const jqueryMatchers: CustomMatcherFactories = {
 } as const;
 
 export const addJqueryCustomEqualityTesters = (): void => {
-    jasmine.getEnv().addCustomEqualityTester((a, b): boolean | void => {
+    jasmine.addCustomEqualityTester((a, b): boolean | void => {
         if (a && b) {
             if (a instanceof _$ || jasmine.isDomNode(a)) {
                 const $a = _$(a)
@@ -367,7 +367,7 @@ export const addJqueryCustomEqualityTesters = (): void => {
         }
     });
 
-    jasmine.getEnv().addCustomEqualityTester((a, b) => {
+    jasmine.addCustomEqualityTester((a, b) => {
         if (a instanceof _$ && b instanceof _$ && (a as any).size() === (b as any).size()) {
             return (a as any).is(b)
         }

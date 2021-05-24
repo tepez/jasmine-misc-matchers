@@ -7,11 +7,11 @@ import { setSpecTimeout } from './utils'
  * This reporter accumulates the spec results of a jasmine run
  */
 class SpecExtractorReporter implements jasmine.CustomReporter {
-    constructor(protected specs: jasmine.CustomReporterResult[]) {
+    constructor(protected specs: jasmine.SpecResult[]) {
 
     }
 
-    specDone(spec: jasmine.CustomReporterResult): void {
+    specDone(spec: jasmine.SpecResult): void {
         this.specs.push(spec);
     }
 }
@@ -23,7 +23,7 @@ class SpecExtractorReporter implements jasmine.CustomReporter {
  *
  * @param filePath
  */
-export async function executeSpecFile(filePath: string): Promise<jasmine.CustomReporterResult[]> {
+export async function executeSpecFile(filePath: string): Promise<jasmine.SpecResult[]> {
     let Jasmine;
     try {
         Jasmine = require('jasmine');
@@ -67,7 +67,7 @@ export async function executeSpecFile(filePath: string): Promise<jasmine.CustomR
         random: false,
     });
 
-    const specs: jasmine.CustomReporterResult[] = [];
+    const specs: jasmine.SpecResult[] = [];
     newJasmine.addReporter(new SpecExtractorReporter(specs));
 
     newJasmine.execute([

@@ -18,7 +18,7 @@ declare global {
              * // returns true
              * expect($('<div class="some-class"></div>')).toHaveClass("some-class")
              */
-            toHaveClass(className: string): boolean
+            toHaveClass(className: string): void
 
             /**
              * Check if DOM element has the given CSS properties.
@@ -33,13 +33,13 @@ declare global {
              * // returns true
              * expect($('<div style="display: none; margin: 10px;"></div>')).toHaveCss({margin: "10px"})
              */
-            toHaveCss(css: any): boolean
+            toHaveCss(css: any): void
 
             /**
              * Checks if DOM element is visible.
              * Elements are considered visible if they consume space in the document. Visible elements have a width or height that is greater than zero.
              */
-            toBeVisible(): boolean
+            toBeVisible(): void
 
             /**
              * Check if DOM element is hidden.
@@ -49,7 +49,7 @@ declare global {
              * - Their width and height are explicitly set to 0.
              * - An ancestor element is hidden, so the element is not shown on the page.
              */
-            toBeHidden(): boolean
+            toBeHidden(): void
 
             /**
              * Only for tags that have checked attribute
@@ -58,7 +58,7 @@ declare global {
              * // returns true
              * expect($('<option selected="selected"></option>')).toBeSelected()
              */
-            toBeSelected(): boolean
+            toBeSelected(): void
 
             /**
              * Only for tags that have checked attribute
@@ -66,24 +66,24 @@ declare global {
              * // returns true
              * expect($('<input type="checkbox" checked="checked"/>')).toBeChecked()
              */
-            toBeChecked(): boolean
+            toBeChecked(): void
 
             /**
              * Checks for child DOM elements or text
              */
-            toBeEmpty(): boolean
+            toBeEmpty(): void
 
             /**
              * Checks if element exists in or out the DOM.
              */
-            toExist(): boolean
+            toExist(): void
 
             /**
              * Checks if array has the given length.
              *
              * @param length Expected length
              */
-            toHaveLength(length: number): boolean
+            toHaveLength(length: number): void
 
             /**
              * Check if DOM element contains an attribute and, optionally, if the value of the attribute is equal to the expected one.
@@ -91,7 +91,7 @@ declare global {
              * @param attributeName Name of the attribute to check
              * @param expectedAttributeValue Expected attribute value
              */
-            toHaveAttr(attributeName: string, expectedAttributeValue?: any): boolean
+            toHaveAttr(attributeName: string, expectedAttributeValue?: any): void
 
             /**
              * Check if DOM element contains a property and, optionally, if the value of the property is equal to the expected one.
@@ -99,14 +99,14 @@ declare global {
              * @param propertyName Property name to check
              * @param expectedPropertyValue Expected property value
              */
-            toHaveProp(propertyName: string, expectedPropertyValue?: any): boolean
+            toHaveProp(propertyName: string, expectedPropertyValue?: any): void
 
             /**
              * Check if DOM element has the given Id
              *
-             * @param Id Expected identifier
+             * @param id
              */
-            toHaveId(id: string): boolean
+            toHaveId(id: string): void
 
             /**
              * Check if DOM element has the specified HTML.
@@ -119,7 +119,7 @@ declare global {
                 html: string,
                 differOptions?: IHtmlDifferOptions,
                 printOptions?: IReportOptions,
-            ): boolean
+            ): void
 
             /**
              * Check if DOM element contains the specified HTML.
@@ -128,7 +128,7 @@ declare global {
              * // returns true
              * expect($('<div><ul></ul><h1>header</h1></div>')).toContainHtml('<ul></ul>')
              */
-            toContainHtml(html: string): boolean
+            toContainHtml(html: string): void
 
             /**
              * Check if DOM element has the given Text.
@@ -138,7 +138,7 @@ declare global {
              * // returns true
              * expect($('<div>some text</div>')).toHaveText('some text')
              */
-            toHaveText(text: string): boolean
+            toHaveText(text: string): void
 
             /**
              * Check if DOM element contains the specified text.
@@ -147,7 +147,7 @@ declare global {
              * // returns true
              * expect($('<div><ul></ul><h1>header</h1></div>')).toContainText('header')
              */
-            toContainText(text: string): boolean
+            toContainText(text: string): void
 
             /**
              * Check if DOM element has the given value.
@@ -157,16 +157,16 @@ declare global {
              * // returns true
              * expect($('<input type="text" value="some text"/>')).toHaveValue('some text')
              */
-            toHaveValue(value: string): boolean
+            toHaveValue(value: string): void
 
             /**
              * Check if DOM element has the given data.
              * This can only be applied for element on with jQuery data(key) can be called.
              *
              */
-            toHaveData(key: string, expectedValue: string): boolean
+            toHaveData(key: string, expectedValue: string): void
 
-            toBe(selector: T): boolean
+            toBe(selector: T): void
 
             /**
              * Check if DOM element is matched by the given selector.
@@ -175,7 +175,7 @@ declare global {
              * // returns true
              * expect($('<div><span class="some-class"></span></div>')).toContain('some-class')
              */
-            toContain(selector: any): boolean
+            toContain(selector: any): void
 
             /**
              * Check if DOM element exists inside the given parent element.
@@ -184,7 +184,7 @@ declare global {
              * // returns true
              * expect($('<div><span class="some-class"></span></div>')).toContainElement('span.some-class')
              */
-            toContainElement(selector: string): boolean
+            toContainElement(selector: string): void
 
             /**
              * Check to see if the set of matched elements matches the given selector
@@ -194,7 +194,7 @@ declare global {
              *
              * @returns {Boolean} true if DOM contains the element
              */
-            toBeMatchedBy(selector: string): boolean
+            toBeMatchedBy(selector: string): void
 
             /**
              * Only for tags that have disabled attribute
@@ -202,7 +202,7 @@ declare global {
              * // returns true
              * expect('<input type="submit" disabled="disabled"/>').toBeDisabled()
              */
-            toBeDisabled(): boolean
+            toBeDisabled(): void
 
             /**
              * Check if DOM element is focused
@@ -210,14 +210,14 @@ declare global {
              * // returns true
              * expect($('<input type="text" />').focus()).toBeFocused()
              */
-            toBeFocused(): boolean
+            toBeFocused(): void
 
             /**
              * Checks to see if the matched element is attached to the DOM.
              * @example
              * expect($('#id-name')[0]).toBeInDOM()
              */
-            toBeInDOM(): boolean
+            toBeInDOM(): void
         }
     }
 }
