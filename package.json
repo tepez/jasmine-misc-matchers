@@ -22,8 +22,10 @@
     "update": "npx gulp build && npx np --no-publish --no-yarn"
   },
   "dependencies": {
+    "@tepez/ts-utils": "^0.1.1",
     "@types/jasmine": "^3.7.4",
     "@types/jquery": "^3.5.5",
+    "csv-stringify": "^5.6.2",
     "html-differ": "^1.4.0",
     "lodash": "^4.17.21",
     "tslib": "^2.2.0"

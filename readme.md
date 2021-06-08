@@ -65,7 +65,7 @@ Tests weather a string is a JSON serialization of given `obj`.
 * getJsonRep(obj: any): any
 
 
-#### Nodejs specific functions
+#### Nodejs specific utilities
 
 * toEqualHtml
 
@@ -91,3 +91,7 @@ Return true if running in debug mode.
 * backupAndRestoreEnv()
 
 Copy process.env before each spec and restore it after it
+
+* JasmineMemoryUsageReporter 
+
+Custom reporter for logging the memory usage before/after every spec to a CSV file 
