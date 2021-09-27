@@ -35,7 +35,7 @@ const modifiers = [
     'inverse',
     'hidden',
     'strikethrough',
-    'visible'
+    'visible',
 ];
 
 for (const modifier of modifiers) {
@@ -78,7 +78,7 @@ const colors = [
     'bgBlueBright',
     'bgMagentaBright',
     'bgCyanBright',
-    'bgWhiteBright'
+    'bgWhiteBright',
 ]
 
 module.exports = {};

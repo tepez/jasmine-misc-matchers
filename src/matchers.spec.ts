@@ -5,7 +5,6 @@ import { AllSpyTypes } from './spies';
 import { executeSpecFile } from './utils-node'
 
 
-
 describe('jasmine-misc-matchers', () => {
     beforeEach(() => {
         jasmine.addMatchers(matchers);
