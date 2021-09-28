@@ -42,6 +42,10 @@ export const compareHtml = (
     };
 }
 
+/**
+ * Includes:
+ * * toEqualHtml
+ */
 export const htmlDifferMatcher: CustomMatcherFactories = {
     toEqualHtml: () => {
         {
@@ -50,4 +54,22 @@ export const htmlDifferMatcher: CustomMatcherFactories = {
             };
         }
     },
+}
+
+/**
+ * Matcher used to compare HTML with toEqual
+ *
+ * @param expectedHtml
+ * @param differOptions
+ */
+export function htmlMatcher(expectedHtml: string, differOptions?: IHtmlDifferOptions): jasmine.AsymmetricMatcher<string> {
+    return {
+        asymmetricMatch: function (actualHtml: string) {
+            const result = compareHtml(expectedHtml, actualHtml, differOptions, null);
+            return result.pass;
+        },
+        jasmineToString: function () {
+            return `HTML: ${expectedHtml}`;
+        },
+    };
 }
