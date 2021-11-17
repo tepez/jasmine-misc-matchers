@@ -1,11 +1,7 @@
-import { htmlDifferMatcher, htmlMatcher } from '..';
+import { htmlMatcher } from '..';
 
 
 describe('htmlMatcher fail specs', () => {
-    beforeEach(() => {
-        jasmine.addMatchers(htmlDifferMatcher);
-    });
-
     it('positive', () => {
         expect('<div>foo</div>').toEqual(htmlMatcher(`
 <div>
