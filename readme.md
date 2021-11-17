@@ -75,6 +75,10 @@ Node.js only by default because html-differ needs some mocking to run on the bro
 
 See [src/browser-chalk.js](./src/browser-chalk.ts) for details.
 
+* htmlTextMatcher
+
+Compares HTML to text using [html-to-text](https://github.com/html-to-text/node-html-to-text)
+
 * executeSpecFile(filePath: string): Promise<jasmine.CustomReporterResult[]>
 
 Execute the specs a jasmine specs file at given path and return the spec results.

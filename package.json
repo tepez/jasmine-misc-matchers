@@ -17,16 +17,20 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "npx gulp build",
+    "dev": "npx gulp dev-unit-test",
     "test": "npx gulp build-unit-test",
     "test-debug": "npx --node-arg=--inspect-brk gulp build-unit-test",
     "update": "npx gulp build && npx np --no-publish --no-yarn"
   },
   "dependencies": {
     "@tepez/ts-utils": "^0.1.1",
+    "@types/html-to-text": "^8.0.1",
     "@types/jasmine": "^3.7.4",
     "@types/jquery": "^3.5.5",
+    "colors": "^1.4.0",
     "csv-stringify": "^5.6.2",
     "html-differ": "^1.4.0",
+    "html-to-text": "^8.1.0",
     "lodash": "^4.17.21",
     "tslib": "^2.2.0"
   },
