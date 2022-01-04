@@ -67,22 +67,18 @@ export async function executeSpecFile(filePath: string): Promise<jasmine.SpecRes
         random: false,
     });
 
+    newJasmine.exitOnCompletion = false;
+
     const specs: jasmine.SpecResult[] = [];
     newJasmine.addReporter(new SpecExtractorReporter(specs));
 
-    newJasmine.execute([
+    await newJasmine.execute([
         filePath,
     ]);
 
-    await new Promise<void>((resolve) => {
-        newJasmine.onComplete(() => {
-            for (const key of globalVariables) {
-                (global as any)[key] = beforeGlobal[key]
-            }
-
-            resolve();
-        });
-    });
+    for (const key of globalVariables) {
+        (global as any)[key] = beforeGlobal[key]
+    }
 
     return specs;
 }

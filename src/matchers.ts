@@ -1,8 +1,17 @@
 import * as _ from 'lodash'
-import './diffBuilder'
 import { AllSpyTypes, isJasmineSpy, isSinonSpy } from './spies'
 import CustomMatcherFactories = jasmine.CustomMatcherFactories;
+import MatchersUtil = jasmine.MatchersUtil;
 
+/**
+ * Fixes
+ *
+ * DEPRECATION: Diff builder should be passed as the third argument to MatchersUtil#equals, not the fourth.
+ * See <https://jasmine.github.io/tutorials/upgrading_to_Jasmine_4.0#matchers-cet> for details.
+ *
+ * Until @types/jasmine fixes this
+ */
+type FixedEquals = (a: any, b: any, diffBuilder?: jasmine.DiffBuilder) => boolean;
 
 declare global {
     namespace jasmine {
@@ -36,7 +45,7 @@ function getSpyName(spy: AllSpyTypes): string {
 }
 
 export const matchers: CustomMatcherFactories = {
-    toHaveBeenCalledWithAt: function () {
+    toHaveBeenCalledWithAt: function (utils) {
         return {
             compare: function (spy: AllSpyTypes, callIndex: number, expectedArgs: any[]) {
                 let actualArgs: any[];
@@ -59,30 +68,30 @@ export const matchers: CustomMatcherFactories = {
                     if (wasCalled) actualArgs = spy.getCall(callIndex).args;
 
                 } else {
-                    throw new Error(`toHaveBeenCalledWithAt: must be called on a spy, got ${jasmine.pp(spy)}`);
+                    throw new Error(`toHaveBeenCalledWithAt: must be called on a spy, got ${utils.pp(spy)}`);
                 }
 
                 const name = getSpyName(spy);
 
-                const diffBuilder = new jasmine.DiffBuilder();
+                const diffBuilder = jasmine.DiffBuilder();
 
                 const ret: jasmine.CustomMatcherResult = {
                     pass: wasCalled
-                        ? jasmine.matchersUtil.equals(actualArgs, expectedArgs, null, diffBuilder)
+                        ? (utils.equals as unknown as FixedEquals)(actualArgs, expectedArgs, diffBuilder)
                         : false,
                 };
 
                 if (wasCalled) {
                     if (ret.pass) {
-                        ret.message = `Expected spy ${name} NOT to be called with ${jasmine.pp(expectedArgs)} on call number ${callIndex}`;
+                        ret.message = `Expected spy ${name} NOT to be called with ${utils.pp(expectedArgs)} on call number ${callIndex}`;
                     } else {
-                        ret.message = `Expected spy ${name} to be called with ${jasmine.pp(expectedArgs)} on call number ${callIndex}, but it was called with unexpected arguments:\n${diffBuilder.getMessage()}`;
+                        ret.message = `Expected spy ${name} to be called with ${utils.pp(expectedArgs)} on call number ${callIndex}, but it was called with unexpected arguments:\n${diffBuilder.getMessage()}`;
                     }
                 } else {
                     if (ret.pass) {
                         // we'll never reach here, this needs to be handled using a negative matcher
                     } else {
-                        ret.message = `Expected spy ${name} to be called with ${jasmine.pp(expectedArgs)} on call number ${callIndex}, but it was only called ${callCount} times`;
+                        ret.message = `Expected spy ${name} to be called with ${utils.pp(expectedArgs)} on call number ${callIndex}, but it was only called ${callCount} times`;
                     }
                 }
 
@@ -93,7 +102,7 @@ export const matchers: CustomMatcherFactories = {
 
     // Based on
     // https://github.com/jasmine/jasmine/blob/v3.3.0/lib/jasmine-core/jasmine.js#L4506
-    toHaveBeenCalledTimes: function () {
+    toHaveBeenCalledTimes: function (utils) {
         return {
             compare: function (spy: AllSpyTypes, expected: number) {
                 let actualCallTimes: number;
@@ -108,7 +117,7 @@ export const matchers: CustomMatcherFactories = {
                 } else if (isSinonSpy(spy)) {
                     actualCallTimes = spy.callCount;
                 } else {
-                    throw new Error(`toHaveBeenCalledWithAt: must be called on a spy, got ${jasmine.pp(spy)}`);
+                    throw new Error(`toHaveBeenCalledWithAt: must be called on a spy, got ${utils.pp(spy)}`);
                 }
 
                 const name = getSpyName(spy);
@@ -128,7 +137,7 @@ export const matchers: CustomMatcherFactories = {
         };
     },
 
-    toHaveOwnProperty: function () {
+    toHaveOwnProperty: function (utils) {
         return {
             compare: function (obj: object, key: string) {
                 const ret: jasmine.CustomMatcherResult = {
@@ -136,22 +145,22 @@ export const matchers: CustomMatcherFactories = {
                 };
 
                 ret.message = ret.pass
-                    ? `Expected ${jasmine.pp(obj)} NOT to have own property ${key}`
-                    : `Expected ${jasmine.pp(obj)} to have own property ${key}`;
+                    ? `Expected ${utils.pp(obj)} NOT to have own property ${key}`
+                    : `Expected ${utils.pp(obj)} to have own property ${key}`;
 
                 return ret;
             },
         };
     },
 
-    toHaveExactKeys: function () {
+    toHaveExactKeys: function (utils) {
         return {
             compare: function (obj: object, ...expectedKeys: string[]) {
-                const diffBuilder = new jasmine.DiffBuilder();
+                const diffBuilder = jasmine.DiffBuilder();
 
                 const actualKeys = Object.keys(obj).sort();
 
-                const pass = jasmine.matchersUtil.equals(
+                const pass = (utils.equals as unknown as FixedEquals)(
                     {
                         missing: _.difference(expectedKeys, actualKeys),
                         extra: _.difference(actualKeys, expectedKeys),
@@ -160,7 +169,6 @@ export const matchers: CustomMatcherFactories = {
                         missing: [],
                         extra: [],
                     },
-                    null,
                     diffBuilder,
                 );
 
@@ -169,8 +177,8 @@ export const matchers: CustomMatcherFactories = {
                 };
 
                 ret.message = ret.pass
-                    ? `Expected ${jasmine.pp(obj)} NOT to have keys ${expectedKeys.join(',')}`
-                    : `Expected ${jasmine.pp(obj)} to have keys ${expectedKeys.join(',')}, but ${diffBuilder.getMessage()}`;
+                    ? `Expected ${utils.pp(obj)} NOT to have keys ${expectedKeys.join(',')}`
+                    : `Expected ${utils.pp(obj)} to have keys ${expectedKeys.join(',')}, but ${diffBuilder.getMessage()}`;
 
                 return ret;
             },
@@ -180,14 +188,14 @@ export const matchers: CustomMatcherFactories = {
 
 export function JSONStringMatcher<T>(obj: T): jasmine.AsymmetricMatcher<string> {
     return {
-        asymmetricMatch: function (json: string) {
+        asymmetricMatch: function (json: string, utils: MatchersUtil) {
             let parsedJson;
             try {
                 parsedJson = JSON.parse(json)
             } catch (err) {
                 return false;
             }
-            return jasmine.matchersUtil.equals(obj, parsedJson);
+            return utils.equals(obj, parsedJson);
         },
         jasmineToString: function () {
             return `JSON serialization of ${JSON.stringify(obj)}`;
