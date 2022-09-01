@@ -23,6 +23,10 @@
     "update": "npx gulp build && npx np --no-publish --no-yarn"
   },
   "dependencies": {
+    "papaparse": "^5.3.2",
+    "@types/papaparse": "^5.3.5",
+    "file-saver": "^2.0.5",
+    "@types/file-saver": "^2.0.5",
     "@tepez/ts-utils": "^0.1.1",
     "@types/html-to-text": "^8.0.1",
     "@types/jasmine": "^3.10.3",
