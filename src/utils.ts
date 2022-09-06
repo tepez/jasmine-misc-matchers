@@ -59,3 +59,37 @@ export function getJsonRep(obj: any): any {
     return JSON.parse(JSON.stringify(obj));
 }
 
+/**
+ * Return true if the jasmine mock clock is installed
+ */
+export function isClockMocked(): boolean {
+    try {
+        jasmine.clock().tick(0);
+        return true;
+    } catch (_err) {
+        return false;
+    }
+}
+
+/**
+ * Perform given function and uninstall the mock jasmine clock before  and after calling it
+ * @param cb
+ */
+export async function tempUninstallClock<T>(
+    cb: () => Promise<T> | T,
+): Promise<T> {
+    let beforeTime: Date;
+    if (isClockMocked()) {
+        beforeTime = new Date();
+        jasmine.clock().uninstall();
+    }
+
+    try {
+        return await cb();
+    } finally {
+        if (beforeTime) {
+            jasmine.clock().install();
+            jasmine.clock().mockDate(beforeTime);
+        }
+    }
+}
