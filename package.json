@@ -18,8 +18,9 @@
   "scripts": {
     "build": "npx gulp build",
     "dev": "npx gulp dev-unit-test",
+    "dev-debug": "npx --node-options=--inspect gulp dev-unit-test",
     "test": "npx gulp build-unit-test",
-    "test-debug": "npx --node-arg=--inspect-brk gulp build-unit-test",
+    "test-debug": "npx --node-options=--inspect gulp build-unit-test",
     "update": "npx gulp build && npx np --no-publish --no-yarn"
   },
   "dependencies": {
