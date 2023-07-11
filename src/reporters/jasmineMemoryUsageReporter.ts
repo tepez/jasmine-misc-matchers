@@ -68,6 +68,8 @@ export class JasmineMemoryUsageReporter implements jasmine.CustomReporter {
             specId: result.id,
             specFullName: result.fullName,
             event: event,
+            status: result.status,
+            duration: result.duration,
             rss: memoryUsage.rss,
             heapTotal: memoryUsage.heapTotal,
             heapUsed: memoryUsage.heapUsed,

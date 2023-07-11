@@ -19,7 +19,13 @@ interface IMemoryInfo {
 }
 
 interface ISpecMemory extends IMemoryInfo,
-    Pick<jasmine.SpecResult, 'id' | 'description' | 'fullName'> {
+    Pick<jasmine.SpecResult,
+        | 'id'
+        | 'description'
+        | 'fullName'
+        | 'status'
+        | 'duration'
+    > {
 
     diff_totalJSHeapSize: number
     diff_usedJSHeapSize: number
@@ -73,6 +79,8 @@ export class JasmineBrowserMemoryLeaksReporter implements jasmine.CustomReporter
 
         this.memoryDiffs.push({
             id: results.id,
+            status: results.status,
+            duration: results.duration,
             fullName: results.fullName,
             description: results.description,
             totalJSHeapSize: _memory.totalJSHeapSize,
