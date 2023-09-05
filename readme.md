@@ -2,7 +2,6 @@
 > Various matchers for jasmine2
 
 [![npm version](https://badge.fury.io/js/%40tepez%2Fjasmine-misc-matchers.svg)](https://badge.fury.io/js/%40tepez%2Fjasmine-misc-matchers)
-[![Build Status](https://secure.travis-ci.org/tepez/jasmine-misc-matchers.svg?branch=master)](http://travis-ci.org/tepez/jasmine-misc-matchers)
 
 ## Install
 
