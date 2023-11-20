@@ -1,6 +1,6 @@
 import Sinon = require('sinon');
 import * as _ from 'lodash'
-import { JSONStringMatcher, matchers } from './matchers'
+import { errorWithMessageMatcher, JSONStringMatcher, matchers } from './matchers'
 import { AllSpyTypes } from './spies';
 import { executeSpecFile } from './utils-node'
 
@@ -286,5 +286,36 @@ Unexpected $.extra[0] = 'key3' in array.`,
         expect('{"a": "b"}').toEqual(JSONStringMatcher({ a: 'b' }));
         expect('{"a": "b"}').not.toEqual(JSONStringMatcher({ a: 'c' }));
         expect('xxx').not.toEqual(JSONStringMatcher({}));
+    });
+
+    describe('errorWithMessage', () => {
+        class CustomError extends Error {
+            public readonly name: string;
+            public constructor(public message: string) {
+                super(message);
+
+                this.name = new.target.prototype.constructor.name;
+                Object.setPrototypeOf(this, new.target.prototype);
+            }
+        }
+
+        it('string message', () => {
+            expect(new Error('mock message')).toEqual(errorWithMessageMatcher('mock message'));
+            expect(new Error('mock message')).not.toEqual(errorWithMessageMatcher('another mock message'));
+        });
+
+        it('regex message', () => {
+            expect(new Error('mock message')).toEqual(errorWithMessageMatcher(/^mock message$/));
+            expect(new Error('mock message')).toEqual(errorWithMessageMatcher(/mock/));
+            expect(new Error('mock message')).not.toEqual(errorWithMessageMatcher(/another/));
+        });
+
+        it('custom error', () => {
+            expect(new CustomError('mock message')).toEqual(errorWithMessageMatcher('mock message', CustomError));
+            expect(new CustomError('mock message')).not.toEqual(errorWithMessageMatcher('another mock message', CustomError));
+
+            expect(new Error('mock message')).toEqual(errorWithMessageMatcher('mock message', Error));
+            expect(new Error('mock message')).not.toEqual(errorWithMessageMatcher('mock message', CustomError));
+        });
     });
 });

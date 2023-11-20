@@ -202,3 +202,31 @@ export function JSONStringMatcher<T>(obj: T): jasmine.AsymmetricMatcher<string> 
         },
     };
 }
+
+export function errorWithMessageMatcher(
+    expectedMessage: string | RegExp,
+    type?: new (...args: any[]) => Error
+): jasmine.AsymmetricMatcher<Error> {
+    return {
+        asymmetricMatch: function (val: Error) {
+            if (!(val instanceof Error)) {
+                return false;
+            }
+
+            if (expectedMessage instanceof RegExp) {
+                if (!expectedMessage.test(val.message)) return false;
+            } else {
+                if (expectedMessage !== val.message) return false;
+            }
+
+            return !type || val instanceof type;
+        },
+        jasmineToString: function () {
+            if (expectedMessage instanceof RegExp) {
+                return `Error with message matching ${expectedMessage}`;
+            } else {
+                return `Error with message ${expectedMessage}`;
+            }
+        },
+    };
+}
