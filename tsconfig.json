@@ -1,8 +1,24 @@
 {
-  "extends": "./node_modules/@tepez/typescript-common/tsconfig-browser",
+  "extends": "./node_modules/@tepez/typescript-common/tsconfig-node.json",
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "src/**/*.spec.ts",
+    // These files are executed executeSpecFile so they should not in the build files not the spec files
+    "src/failSpecs/**/*.ts"
+  ],
   "compilerOptions": {
+    "lib": [
+      "es2020",
+      "DOM"
+    ],
     "outDir": "dist",
     "declaration": true,
-    "declarationDir": "dist"
+    "declarationDir": "dist",
+    "types": [
+      "jasmine",
+      "jquery"
+    ]
   }
 }

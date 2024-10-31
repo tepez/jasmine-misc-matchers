@@ -13,6 +13,15 @@ import MatchersUtil = jasmine.MatchersUtil;
  */
 type FixedEquals = (a: any, b: any, diffBuilder?: jasmine.DiffBuilder) => boolean;
 
+/**
+ * jasmine.DiffBuilder is a constructor, not a function
+ *
+ * @types/jasmine gets this wrong
+ */
+type FixedDiffBuilderClass = {
+    new(): jasmine.DiffBuilder
+}
+
 declare global {
     namespace jasmine {
         interface Matchers<T> {
@@ -73,7 +82,7 @@ export const matchers: CustomMatcherFactories = {
 
                 const name = getSpyName(spy);
 
-                const diffBuilder = jasmine.DiffBuilder();
+                const diffBuilder = new (jasmine.DiffBuilder as unknown as FixedDiffBuilderClass)();
 
                 const ret: jasmine.CustomMatcherResult = {
                     pass: wasCalled
@@ -156,7 +165,7 @@ export const matchers: CustomMatcherFactories = {
     toHaveExactKeys: function (utils) {
         return {
             compare: function (obj: object, ...expectedKeys: string[]) {
-                const diffBuilder = jasmine.DiffBuilder();
+                const diffBuilder = new (jasmine.DiffBuilder as unknown as FixedDiffBuilderClass)();
 
                 const actualKeys = Object.keys(obj).sort();
 

@@ -1,7 +1,6 @@
 import { assignToPartial } from '@tepez/ts-utils';
 import { info } from 'console';
-import * as CsvStringify from 'csv-stringify';
-import { Stringifier } from 'csv-stringify';
+import { Stringifier, stringify } from 'csv-stringify';
 import * as Fs from 'fs'
 import SpecResult = jasmine.SpecResult;
 
@@ -51,7 +50,7 @@ export class JasmineMemoryUsageReporter implements jasmine.CustomReporter {
 
         this.prevUsage = process.memoryUsage();
 
-        this.csvStream = CsvStringify({
+        this.csvStream = stringify({
             header: true,
             bom: true,
         });

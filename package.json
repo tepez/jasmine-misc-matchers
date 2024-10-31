@@ -16,42 +16,41 @@
   "browser": "dist/index-browser.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "npx gulp build",
-    "dev": "npx gulp dev-unit-test",
-    "dev-debug": "npx --node-options=--inspect gulp dev-unit-test",
-    "test": "npx gulp build-unit-test",
-    "test-debug": "npx --node-options=--inspect gulp build-unit-test",
-    "update": "npx gulp build && npx np --no-publish --no-yarn"
+    "build": "npm run clean && tsc",
+    "clean": "del-cli dist",
+    "dev": "nodemon --watch \"src/**\" --ext ts --exec \"node -r ts-node/register/transpile-only node_modules/jasmine/bin/jasmine.js --config=node_modules/@tepez/typescript-build-gulp-tasks/dist/jasmine/dev.js\"",
+    "dev-debug": "nodemon --watch \"src/**\" --ext ts --exec \"node -r ts-node/register/transpile-only --inspect node_modules/jasmine/bin/jasmine.js --config=node_modules/@tepez/typescript-build-gulp-tasks/dist/jasmine/dev.js\"",
+    "test": "node -r ts-node/register/transpile-only node_modules/jasmine/bin/jasmine.js --config=node_modules/@tepez/typescript-build-gulp-tasks/dist/jasmine/build.js",
+    "test-debug": "node -r ts-node/register/transpile-only --inspect-brk node_modules/jasmine/bin/jasmine.js --config=node_modules/@tepez/typescript-build-gulp-tasks/dist/jasmine/build.js",
+    "update": "npm run build && npx np --no-publish"
   },
   "dependencies": {
-    "papaparse": "^5.3.2",
-    "@types/papaparse": "^5.3.5",
-    "file-saver": "^2.0.5",
-    "@types/file-saver": "^2.0.5",
-    "@tepez/ts-utils": "^0.1.1",
-    "@types/html-to-text": "^8.0.1",
-    "@types/jasmine": "^3.10.3",
-    "@types/jquery": "^3.5.5",
+    "@tepez/ts-utils": "^0.1.3",
+    "@types/file-saver": "^2.0.7",
+    "@types/html-to-text": "^9.0.4",
+    "@types/jasmine": "^5.1.4",
+    "@types/jquery": "^3.5.32",
+    "@types/papaparse": "^5.3.15",
     "colors": "^1.4.0",
-    "csv-stringify": "^5.6.2",
+    "csv-stringify": "^6.5.1",
+    "file-saver": "^2.0.5",
     "html-differ": "^1.4.0",
-    "html-to-text": "^8.1.0",
+    "html-to-text": "^9.0.5",
     "lodash": "^4.17.21",
-    "tslib": "^2.2.0"
+    "papaparse": "^5.4.1"
   },
   "devDependencies": {
-    "@tepez/typescript-build-gulp-tasks": "^6.5.1",
-    "@tepez/typescript-common": "^0.2.2",
-    "@types/gulp": "^4.0.8",
-    "@types/lodash": "^4.14.170",
-    "@types/node": "*",
-    "@types/sinon": "10.0.0",
-    "gulp": "^4.0.2",
-    "np": "7.5.0",
-    "sinon": "^10.0.0",
-    "strip-ansi": "^6.0.0"
+    "@tepez/typescript-build-gulp-tasks": "^8.0.0",
+    "@tepez/typescript-common": "^2.0.0",
+    "@types/jasmine": "^5.1.4",
+    "@types/lodash": "^4.17.13",
+    "@types/node": "^20.17.4",
+    "@types/sinon": "17.0.3",
+    "np": "^10.0.7",
+    "sinon": "^19.0.2",
+    "strip-ansi": "^6.0.1"
   },
   "peerDependencies": {
-    "jasmine": "^3.99.0"
+    "jasmine": "^5.4.0"
   }
 }
