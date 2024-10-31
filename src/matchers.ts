@@ -1,26 +1,8 @@
 import * as _ from 'lodash'
 import { AllSpyTypes, isJasmineSpy, isSinonSpy } from './spies'
+import { FixedJasmineDiffBuilder, FixedMatchersUtilEquals } from './types';
 import CustomMatcherFactories = jasmine.CustomMatcherFactories;
 import MatchersUtil = jasmine.MatchersUtil;
-
-/**
- * Fixes
- *
- * DEPRECATION: Diff builder should be passed as the third argument to MatchersUtil#equals, not the fourth.
- * See <https://jasmine.github.io/tutorials/upgrading_to_Jasmine_4.0#matchers-cet> for details.
- *
- * Until @types/jasmine fixes this
- */
-type FixedEquals = (a: any, b: any, diffBuilder?: jasmine.DiffBuilder) => boolean;
-
-/**
- * jasmine.DiffBuilder is a constructor, not a function
- *
- * @types/jasmine gets this wrong
- */
-type FixedDiffBuilderClass = {
-    new(): jasmine.DiffBuilder
-}
 
 declare global {
     namespace jasmine {
@@ -82,11 +64,11 @@ export const matchers: CustomMatcherFactories = {
 
                 const name = getSpyName(spy);
 
-                const diffBuilder = new (jasmine.DiffBuilder as unknown as FixedDiffBuilderClass)();
+                const diffBuilder = new (jasmine.DiffBuilder as unknown as FixedJasmineDiffBuilder)();
 
                 const ret: jasmine.CustomMatcherResult = {
                     pass: wasCalled
-                        ? (utils.equals as unknown as FixedEquals)(actualArgs, expectedArgs, diffBuilder)
+                        ? (utils.equals as unknown as FixedMatchersUtilEquals)(actualArgs, expectedArgs, diffBuilder)
                         : false,
                 };
 
@@ -165,11 +147,11 @@ export const matchers: CustomMatcherFactories = {
     toHaveExactKeys: function (utils) {
         return {
             compare: function (obj: object, ...expectedKeys: string[]) {
-                const diffBuilder = new (jasmine.DiffBuilder as unknown as FixedDiffBuilderClass)();
+                const diffBuilder = new (jasmine.DiffBuilder as unknown as FixedJasmineDiffBuilder)();
 
                 const actualKeys = Object.keys(obj).sort();
 
-                const pass = (utils.equals as unknown as FixedEquals)(
+                const pass = (utils.equals as unknown as FixedMatchersUtilEquals)(
                     {
                         missing: _.difference(expectedKeys, actualKeys),
                         extra: _.difference(actualKeys, expectedKeys),
