@@ -1,6 +1,6 @@
 {
   "name": "@tepez/jasmine-misc-matchers",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "Various matchers for jasmine2",
   "homepage": "https://github.com/tepez/jasmine-misc-matchers#readme",
   "bugs": {
