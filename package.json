@@ -41,7 +41,7 @@
   },
   "devDependencies": {
     "@tepez/typescript-build-gulp-tasks": "^8.0.0",
-    "@tepez/typescript-common": "^2.0.0",
+    "@tepez/typescript-common": "^2.0.1",
     "@types/jasmine": "^5.1.4",
     "@types/lodash": "^4.17.13",
     "@types/node": "^20.17.4",
